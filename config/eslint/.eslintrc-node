@@ -1,7 +1,9 @@
 ---
 extends:
   - "walmart/configurations/es6-node"
-
+  - plugin:jsdoc/recommended
+plugins:
+  - jsdoc
 rules:
   "func-style":
     - 0
@@ -10,3 +12,8 @@ rules:
     - 0
   "no-extra-parens":
     - 0
+  "valid-jsdoc":
+    - 0
+  jsdoc/require-param-type: 0
+  jsdoc/require-returns-type: 0
+  "no-magic-numbers": 1

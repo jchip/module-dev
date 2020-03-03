@@ -1,9 +1,16 @@
 {
   "name": "@xarc/module-dev",
   "version": "1.0.0",
-  "main": "lib/arch-clap.js",
-  "description": "Archetype for NodeJS Module (Development)",
-  "scripts": {},
+  "main": "index.js",
+  "types": "dist/arch-clap.d.ts",
+  "description": "Support for developing node.js modules with mocha/eslint/typescript",
+  "scripts": {
+    "build": "tsc",
+    "test": "clap -n xarc/test",
+    "compile": "tsc",
+    "prepublishOnly": "tsc",
+    "postinstall": "node install.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/jchip/module-dev.git"
@@ -12,23 +19,63 @@
   "license": "Apache-2.0",
   "files": [
     "config",
-    "lib"
+    "dist",
+    "install.js"
+  ],
+  "keywords": [
+    "node",
+    "node.js",
+    "npm",
+    "module",
+    "develop",
+    "mocha",
+    "eslint",
+    "typescript"
   ],
   "dependencies": {
-    "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
-    "eslint": "^5.15.0",
-    "eslint-config-walmart": "^2.2.1",
-    "eslint-plugin-filenames": "^1.1.0",
-    "mocha": "^6.0.2",
-    "nyc": "^13.3.0",
+    "filter-scan-dir": "^1.0.10",
+    "lodash": "^4.17.15",
+    "mocha": "^7.1.0",
+    "nyc": "^15.0.0",
     "sinon": "^7.2.6",
     "sinon-chai": "^3.3.0",
-    "xclap": "^0.2.27",
+    "xclap": "^0.2.43",
     "xsh": "^0.4.4"
   },
-  "optionalDependencies": {},
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/node": "^13.7.6",
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-walmart": "^2.2.1",
+    "eslint-plugin-filenames": "^1.1.0",
+    "eslint-plugin-jsdoc": "^21.0.0",
+    "prettier": "^1.19.1",
+    "source-map-support": "^0.5.16",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  },
+  "prettier": {
+    "printWidth": 100
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "mocha": {
+    "require": [
+      "ts-node/register",
+      "source-map-support/register",
+      "./config/test/setup.js"
+    ],
+    "recursive": true
+  },
   "nyc": {
+    "extends": [
+      "@istanbuljs/nyc-config-typescript"
+    ],
     "all": true,
     "reporter": [
       "lcov",
@@ -36,11 +83,18 @@
       "text-summary"
     ],
     "exclude": [
-      "coverage",
       "*clap.js",
-      "gulpfile.js",
+      "*clap.ts",
+      "coverage",
       "dist",
+      "gulpfile.js",
       "test"
-    ]
+    ],
+    "check-coverage": false,
+    "statements": 100,
+    "branches": 100,
+    "functions": 100,
+    "lines": 100,
+    "cache": false
   }
 }
