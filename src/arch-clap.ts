@@ -6,6 +6,10 @@ import * as filterScanDir from "filter-scan-dir";
 import * as xclap from "xclap";
 import * as _ from "lodash";
 
+const typedocDeps = {
+  typedoc: "^0.16.11"
+};
+
 const typeScriptDevDeps = {
   // code coverage
   "@istanbuljs/nyc-config-typescript": "^1.0.1",
@@ -89,6 +93,7 @@ class XarcModuleDev {
   appPkg: Record<string, any>;
   hasEslint: boolean;
   hasTypeScript: boolean;
+  hasTypedoc: boolean;
   existAppPkgData: string;
   tsConfig: Record<string, any>;
 
@@ -126,18 +131,25 @@ class XarcModuleDev {
   updateFeatures() {
     this.hasEslint = this.appHasDevDeps(...Object.keys(eslintDevDeps));
     this.hasTypeScript = this.appHasDevDeps(...Object.keys(typeScriptDevDeps));
+    this.hasTypedoc = this.appHasDevDeps(...Object.keys(typedocDeps));
   }
 
   setupXclapFile() {
+    const saveFile = (name, content) => {
+      if (!Fs.existsSync(name)) {
+        Fs.writeFileSync(name, content);
+      }
+    };
+
     if (this.hasTypeScript) {
-      Fs.writeFileSync(
+      saveFile(
         Path.resolve("xclap.ts"),
         `import { loadTasks } from "@xarc/module-dev";
 loadTasks();
 `
       );
     } else {
-      Fs.writeFileSync(
+      saveFile(
         Path.resolve("xclap.js"),
         `require("@xarc/module-dev")();
 `
@@ -167,6 +179,7 @@ node_modules
   addDevDeps(...features: string[]) {
     const isTs = features.includes("typescript");
     const isEslint = features.includes("eslint");
+    const isTypedoc = features.includes("typedoc");
 
     if (isTs) {
       this.addDevDepsToAppPkg(typeScriptDevDeps);
@@ -182,6 +195,13 @@ node_modules
       this.addDevDepsToAppPkg(eslintTSDevDeps);
     }
 
+    if (isTypedoc) {
+      this.addDevDepsToAppPkg(typedocDeps);
+      if (!this.hasTypeScript) {
+        console.log(`ERROR: typedoc support requires typescript.`);
+      }
+    }
+
     if (this.saveAppPkgJson()) {
       const x = features.join(", ");
       console.log(`INFO: ${x} dependencies added to your package.json, please install modules again.
@@ -192,6 +212,7 @@ node_modules
   rmDevDeps(...features: string[]) {
     const isTs = features.includes("typescript");
     const isEslint = features.includes("eslint");
+    const isTypedoc = features.includes("typedoc");
 
     if (isTs) {
       this.rmDevDepsFromAppPkg(typeScriptDevDeps);
@@ -199,6 +220,10 @@ node_modules
 
     if (isEslint) {
       this.rmDevDepsFromAppPkg(eslintDevDeps);
+    }
+
+    if (isTypedoc) {
+      this.rmDevDepsFromAppPkg(typedocDeps);
     }
 
     if (isTs || isEslint) {
@@ -313,12 +338,31 @@ node_modules
     }
     const scripts = this.appPkg.scripts || {};
     this.appPkg.scripts = scripts;
-    _.defaults(scripts, {
-      compile: "tsc",
-      prepublishOnly: "tsc"
+    const prepublishTasks = ["build"];
+    if (this.hasTypedoc) {
+      prepublishTasks.push("docs");
+    }
+    this.appPkg.scripts = _.merge({}, scripts, {
+      build: "tsc",
+      prepublishOnly: `clap -n ${prepublishTasks.join(" ")}`
     });
     if (this.saveAppPkgJson()) {
-      console.log(`INFO: added compile and prepublishOnly npm scripts for your typescript.`);
+      console.log(`INFO: added build and prepublishOnly npm scripts for your typescript.`);
+    }
+  }
+
+  setupTypedocScripts(): void {
+    if (!this.hasTypedoc) {
+      return;
+    }
+    this.updateFeatures();
+    const scripts = this.appPkg.scripts || {};
+    this.appPkg.scripts = scripts;
+    _.defaults(scripts, {
+      docs: `typedoc --excludeNotExported --out docs src`
+    });
+    if (this.saveAppPkgJson()) {
+      console.log(`INFO: added docs npm scripts for your typescript.`);
     }
   }
 
@@ -374,7 +418,9 @@ node_modules
     });
     nyc.reporter = _.uniq(nyc.reporter.concat(["lcov", "text", "text-summary"]).sort());
     nyc.exclude = _.uniq(
-      nyc.exclude.concat(["coverage", "*clap.js", "*clap.ts", "gulpfile.js", "dist", "test"]).sort()
+      nyc.exclude
+        .concat(["coverage", "docs", "*clap.js", "*clap.ts", "gulpfile.js", "dist", "test"])
+        .sort()
     );
     this.appPkg.nyc = nyc;
     if (this.saveAppPkgJson()) {
@@ -419,18 +465,29 @@ function makeTasks(options: XarcModuleDevOptions) {
         }
       ]
     },
+    typedoc: {
+      desc: "Add support to your project for generating API docs using typedoc",
+      task: [
+        "add-typedoc-deps",
+        () => {
+          xarcModuleDev.setupTypedocScripts();
+          xarcModuleDev.setupCompileScripts();
+        }
+      ]
+    },
     eslint: {
       desc: "Add config and deps to your project for eslint support",
       task: ["add-eslint-deps"]
     },
     init: {
       desc: `Bootstrap a project for development with @xarc/module-dev
-          Options: --no-typescript --eslint`,
+          Options: --no-typescript --no-typedoc --eslint`,
       task() {
         const initTasks: (Function | string)[] = [];
         const noTs = "--no-typescript";
         const eslint = "--eslint";
-        const xtra = _.without(this.argv, noTs, eslint, "init");
+        const noTd = "--no-typedoc";
+        const xtra = _.without(this.argv, noTs, eslint, noTd, "init");
         if (xtra.length > 0) {
           throw new Error(`Unknown options for init task ${xtra.join(", ")}`);
         }
@@ -439,6 +496,9 @@ function makeTasks(options: XarcModuleDevOptions) {
         }
         if (this.argv.includes(eslint)) {
           initTasks.push("eslint");
+        }
+        if (!this.argv.includes(noTd)) {
+          initTasks.push("typedoc");
         }
         initTasks.push(() => {
           xarcModuleDev.loadAppPkg();
@@ -478,6 +538,10 @@ function makeTasks(options: XarcModuleDevOptions) {
     "add-typescript-deps": {
       desc: "Add dependencies for typescript support to your package.json",
       task: () => xarcModuleDev.addDevDeps("typescript")
+    },
+    "add-typedoc-deps": {
+      desc: "Add dependencies for typedoc",
+      task: () => xarcModuleDev.addDevDeps("typedoc")
     },
     "add-eslint-deps": {
       desc: "Add dependencies for eslint support to your package.json",

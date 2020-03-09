@@ -8,12 +8,13 @@
     "build": "tsc",
     "test": "clap -n xarc/test",
     "compile": "tsc",
-    "prepublishOnly": "tsc",
-    "postinstall": "node install.js"
+    "prepublishOnly": "clap -n compile docs",
+    "postinstall": "node install.js",
+    "docs": "typedoc --excludeNotExported --out docs src"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jchip/module-dev.git"
+    "url": "https://github.com/electrode-io/module-dev.git"
   },
   "author": "Joel Chen",
   "license": "Apache-2.0",
@@ -56,6 +57,7 @@
     "prettier": "^1.19.1",
     "source-map-support": "^0.5.16",
     "ts-node": "^8.6.2",
+    "typedoc": "^0.16.11",
     "typescript": "^3.8.3"
   },
   "prettier": {

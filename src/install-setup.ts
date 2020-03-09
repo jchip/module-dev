@@ -48,7 +48,8 @@ To bootstrap your project, run:
 Options:
 
   --eslint        - bootstrap with eslint support
-  --no-typescript - don't bootstrap with typescript support`);
+  --no-typescript - don't bootstrap with typescript support
+  --no-typedoc    - don't bootstrap with typedoc support`);
 }
 
 installSetup();

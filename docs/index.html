@@ -1,0 +1,286 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@xarc/module-dev</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@xarc/module-dev</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>@xarc/module-dev</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#support-for-developing-nodejs-modules-with-mochaeslinttypescript" id="support-for-developing-nodejs-modules-with-mochaeslinttypescript" style="color: inherit; text-decoration: none;">
+					<h1>Support for developing node.js modules with mocha/eslint/typescript</h1>
+				</a>
+				<p>This module offers common config and setup for developing a node.js module.</p>
+				<p>Support for standard tools include:</p>
+				<ul>
+					<li>Language: <a href="https://www.typescriptlang.org/">TypeScript</a></li>
+					<li>Testing and code coverage: <a href="https://www.chaijs.com/">chai</a>, <a href="https://mochajs.org/">mocha</a>, <a href="https://istanbul.js.org/">nyc</a>, <a href="https://sinonjs.org/">sinon</a></li>
+					<li>Code linting: <a href="https://eslint.org/">eslint</a></li>
+					<li>Documentation: <a href="https://jsdoc.app/">jsdoc</a>, <a href="https://typedoc.org/">typedoc</a></li>
+				</ul>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<p>To start a new module, first create the directory for it:</p>
+				<pre><code class="language-sh">mkdir my-module
+<span class="hljs-built_in">cd</span> my-module</code></pre>
+				<p>Then follow the instructions below to setup development:</p>
+				<ol>
+					<li>Within your new project dir, run:</li>
+				</ol>
+				<pre><code class="language-sh">npm init --yes
+npm install --save-dev @xarc/module-dev</code></pre>
+				<ol start="2">
+					<li>Bootstrap: then to bootstrap your project, use the following commands:</li>
+				</ol>
+				<pre><code class="language-sh">npx clap --require @xarc/module-dev init
+npm install</code></pre>
+				<ul>
+					<li><p><code>init</code> takes the following options. ie: <code>npx clap --require @xarc/module-dev init --eslint</code></p>
+						<ul>
+							<li><code>--no-typescript</code> - bootstrap without typescript support.</li>
+							<li><code>--eslint</code> - bootstrap with eslint support.</li>
+						</ul>
+					</li>
+				</ul>
+				<ol start="3">
+					<li>Now you can run <code>npx clap</code> to see a list of build tasks available for developing your node.js module.</li>
+				</ol>
+				<a href="#xclap-cli" id="xclap-cli" style="color: inherit; text-decoration: none;">
+					<h3>xclap-cli</h3>
+				</a>
+				<p>If you want to be able to run <code>clap</code> directly instead of having to do <code>npx clap</code>, then you can install globally a simple package <a href="https://www.npmjs.com/package/xclap-cli">xclap-cli</a> with the following command.</p>
+				<pre><code class="language-sh">$ npm install -g xclap-cli</code></pre>
+				<a href="#project-structure" id="project-structure" style="color: inherit; text-decoration: none;">
+					<h2>Project Structure</h2>
+				</a>
+				<p>This module&#39;s setup assumes your project follows a directory structure like below:</p>
+				<pre><code>.gitignore
+package.json
+tsconfig.json
+
+<span class="hljs-class"><span class="hljs-keyword">lib</span>/</span>
+  index.js
+
+dist/
+  index.js
+  index.d.js
+  index.js.map
+
+src/
+  index.ts
+
+test/
+  spec/**
+    *.spec.js
+    *.spec.ts</code></pre><p>If you are writing JavaScript that node.js can execute directly, then you can put them in <code>lib</code> dir.</p>
+				<p>If you are using TypeScript, then you can put your <code>ts</code> source in <code>src</code> dir, and then run <code>npx tsc</code> to compile them into the <code>dist</code> dir.</p>
+				<p><code>.d.ts</code> type definition files and source map files will also be generated into the <code>dist</code> dir.</p>
+				<a href="#developing" id="developing" style="color: inherit; text-decoration: none;">
+					<h2>Developing</h2>
+				</a>
+				<p>Once you start writing your code, either as <a href="https://www.typescriptlang.org/">TypeScript</a> in <code>src</code> or JavaScript in <code>lib</code>, you should put your tests in the directory <code>test/spec</code> as <code>*.spec.js</code> or <code>*.spec.ts</code> files.</p>
+				<p>The following are common build tasks that you would use:</p>
+				<ul>
+					<li>Run linting and tests: <code>npx clap test</code></li>
+					<li>Run tests without linting: <code>npx clap test-only</code></li>
+					<li>Run linting and tests with coverage: <code>npx clap check</code></li>
+				</ul>
+				<p>Your <a href="https://www.typescriptlang.org/">TypeScript</a> tests should import your TS code from <code>src</code> directly.</p>
+				<a href="#publishing" id="publishing" style="color: inherit; text-decoration: none;">
+					<h2>Publishing</h2>
+				</a>
+				<p>When you are ready to publish your module to <a href="https://www.npmjs.com/">npm</a>, please keep the following in mind:</p>
+				<p>This module automatically setup <a href="https://docs.npmjs.com/files/package.json#files">files</a> in your <code>package.json</code> to include these files to publish:</p>
+				<ul>
+					<li><code>lib</code> - If you have JavaScript in <code>lib</code> dir</li>
+					<li><code>dist</code> - If you are writing your code in <a href="https://www.typescriptlang.org/">TypeScript</a>.</li>
+				</ul>
+				<p>For <a href="https://www.typescriptlang.org/">TypeScript</a>, your code from <code>src</code> directory is not included. If you want to include <code>src</code> dir, please add that to <a href="https://docs.npmjs.com/files/package.json#files">files</a>.</p>
+				<ul>
+					<li>If you have any other files or dirs that you want to publish, then add them to the <code>files</code> list.</li>
+					<li>You can run <code>npm publish --dry-run</code> to see what <a href="https://www.npmjs.com/">npm</a> will do without actually publishing for real.</li>
+					<li>When you are ready to publish for real, you can run <code>npm publish</code>.</li>
+				</ul>
+				<a href="#a-hrefhttpswwwtypescriptlangorgtypescripta-support" id="a-hrefhttpswwwtypescriptlangorgtypescripta-support" style="color: inherit; text-decoration: none;">
+					<h2><a href="https://www.typescriptlang.org/">TypeScript</a> Support</h2>
+				</a>
+				<p>If you boostrapped your project without <a href="https://www.typescriptlang.org/">TypeScript</a>, but then want to add it later, you can run the <code>typescript</code> build task any time:</p>
+				<pre><code class="language-sh">npx clap typescript
+npm install
+mkdir src</code></pre>
+				<p>And now you can start writing typescript code in the <code>src</code> directory</p>
+				<a href="#tsconfigjson" id="tsconfigjson" style="color: inherit; text-decoration: none;">
+					<h3>tsconfig.json</h3>
+				</a>
+				<p>After this module created <code>tsconfig.json</code> for you, you can change it as you like. This moudle won&#39;t override your settings.</p>
+				<a href="#a-hrefhttpseslintorgeslinta-support" id="a-hrefhttpseslintorgeslinta-support" style="color: inherit; text-decoration: none;">
+					<h2><a href="https://eslint.org/">eslint</a> Support</h2>
+				</a>
+				<p>If you didn&#39;t bootstrap your project with <a href="https://eslint.org/">eslint</a> support, you can always add it later by running <code>npx clap eslint</code>, and then <code>npm install</code>.</p>
+				<p>You can also invoke the linting task with <code>npx clap lint</code></p>
+				<p>The build task <code>check</code> will run linting also. You can invoke it with <code>npx clap check</code>.</p>
+				<p>If you need to disable certain eslint rules for a specific source file, you can add the following comment to the top of your file.</p>
+				<pre><code class="language-js"><span class="hljs-comment">/* eslint-disable no-console, no-magic-numbers, max-statements */</span></code></pre>
+				<p>This comment disables the following three rules:</p>
+				<ul>
+					<li><code>no-console</code></li>
+					<li><code>no-magic-numbers</code></li>
+					<li><code>max-statements</code></li>
+				</ul>
+				<a href="#a-hrefhttpsjsdocappjsdoca-linting" id="a-hrefhttpsjsdocappjsdoca-linting" style="color: inherit; text-decoration: none;">
+					<h2><a href="https://jsdoc.app/">jsdoc</a> linting</h2>
+				</a>
+				<p>If you&#39;ve enabled <a href="https://eslint.org/">eslint</a>, then linting rules for <a href="https://jsdoc.app/">jsdoc</a> is added with the plugin <a href="https://www.npmjs.com/package/eslint-plugin-jsdoc">eslint-plugin-jsdoc</a>.</p>
+				<a href="#a-hrefhttpstypedocorgtypedoca-support" id="a-hrefhttpstypedocorgtypedoca-support" style="color: inherit; text-decoration: none;">
+					<h2><a href="https://typedoc.org/">typedoc</a> Support</h2>
+				</a>
+				<p>If you&#39;ve enabled <a href="https://www.typescriptlang.org/">TypeScript</a>, then <a href="https://typedoc.org/">typedoc</a> is added to automatically generate HTML in <code>docs</code> from your <a href="https://jsdoc.app/">jsdoc</a> in your code in the <code>src</code> directory.</p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p>Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></p>
+				<hr>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_arch_clap_.html">&quot;arch-<wbr>clap&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

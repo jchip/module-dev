@@ -7,7 +7,7 @@ Support for standard tools include:
 - Language: [TypeScript]
 - Testing and code coverage: [chai], [mocha], [nyc], [sinon]
 - Code linting: [eslint]
-- Documentation: [jsdoc]
+- Documentation: [jsdoc], [typedoc]
 
 ## Installation
 
@@ -144,9 +144,15 @@ This comment disables the following three rules:
 - `no-magic-numbers`
 - `max-statements`
 
-## [jsdoc] Support
+## [jsdoc] linting
 
 If you've enabled [eslint], then linting rules for [jsdoc] is added with the plugin [eslint-plugin-jsdoc].
+
+## [typedoc] Support
+
+If you've enabled [TypeScript], then [typedoc] is added to automatically generate HTML in `docs` from your [jsdoc] in your code in the `src` directory.
+
+To generate the docs manually, run `npm run docs`. And then open `docs/index.html` to see the generated HTML docs.
 
 ## License
 
@@ -162,6 +168,7 @@ Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses
 [nyc]: https://istanbul.js.org/
 [sinon]: https://sinonjs.org/
 [jsdoc]: https://jsdoc.app/
+[typedoc]: https://typedoc.org/
 [eslint-plugin-jsdoc]: https://www.npmjs.com/package/eslint-plugin-jsdoc
 [files]: https://docs.npmjs.com/files/package.json#files
 [npm]: https://www.npmjs.com/
