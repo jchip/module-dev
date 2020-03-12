@@ -2,10 +2,10 @@
   "name": "@xarc/module-dev",
   "version": "1.0.0",
   "main": "index.js",
-  "types": "dist/arch-clap.d.ts",
+  "types": "dist/module-dev.d.ts",
   "description": "Support for developing node.js modules with mocha/eslint/typescript",
   "scripts": {
-    "build": "tsc",
+    "build": "clap -n compile",
     "test": "clap -n xarc/test",
     "compile": "tsc",
     "prepublishOnly": "clap -n compile docs",

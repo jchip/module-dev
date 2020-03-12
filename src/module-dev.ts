@@ -440,6 +440,8 @@ function makeTasks(options: XarcModuleDevOptions) {
     process.env.FORCE_COLOR = "true";
   }
 
+  const { serial } = options.xclap;
+
   const xarcModuleDev = new XarcModuleDev(options);
 
   const lint = options.enableLinting !== false && xarcModuleDev.hasEslint;
@@ -507,7 +509,7 @@ function makeTasks(options: XarcModuleDevOptions) {
           xarcModuleDev.setupMocha();
           xarcModuleDev.setupGitIgnore();
         });
-        return xclap.serial(initTasks);
+        return serial(initTasks);
       }
     },
     "rm-typescript": {

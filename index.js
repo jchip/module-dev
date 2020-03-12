@@ -1,5 +1,5 @@
 "use strict";
-const { loadTasks } = require("./dist/arch-clap");
+const { loadTasks } = require("./dist/module-dev");
 // commonjs happy
 module.exports = (...args) => loadTasks(...args);
 // esm happy

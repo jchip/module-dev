@@ -154,6 +154,49 @@ If you've enabled [TypeScript], then [typedoc] is added to automatically generat
 
 To generate the docs manually, run `npm run docs`. And then open `docs/index.html` to see the generated HTML docs.
 
+## Compiling JSX
+
+You can add JSX support by updating your `tsconfig.json` with following options:
+
+```js
+{
+  compilerOptions: {
+    "jsx": "react"
+  }
+}
+```
+
+### React
+
+- To compile React JSX components:
+
+1. Add [react] to your dependencies: `npm install react`
+
+### Preact
+
+- To compile Preact JSX components:
+
+1. Add [preact] to your dependencies: `npm install preact`
+2. Add `dom` to `compilerOptions.lib` in your tsconfig:
+
+```js
+{
+  "compilerOptions": {
+    "lib": ["dom"]
+  }
+}
+```
+
+## Additional Targets
+
+If you need to compile your `src` to multiple targets, you can do this by:
+
+1. Make a copy of `tsconfig.json` for your target. ie: `tsconfig.es5.json`
+2. Add a `npm scripts` to run `tsc` with `--build` option. ie: `tsc --build tsconfig.es5.json`
+3. Update `build` script to have `xclap` run your new compile script. So if you named it `compile.es5`, your `build` would be: `clap -n compile compile.es5`
+
+- In your additional target config, you don't need `tsc` to generate the `.d.ts` files. You can turn it off by setting `declaration` to `false`
+
 ## License
 
 Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
@@ -172,3 +215,5 @@ Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses
 [eslint-plugin-jsdoc]: https://www.npmjs.com/package/eslint-plugin-jsdoc
 [files]: https://docs.npmjs.com/files/package.json#files
 [npm]: https://www.npmjs.com/
+[react]: https://reactjs.org/
+[preact]: https://preactjs.com/

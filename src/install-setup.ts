@@ -29,10 +29,10 @@ function searchAppDir(dir: string, depth = 0): string {
 }
 
 /**
- * Setup npm scripts for bootstrapping a module project
+ * Show instructions on bootstrapping a project after npm install if project
+ * doesn't have xclap.js or xclap.ts files yet.
  */
 function installSetup(): void {
-  // console.error("@xarc/module-dev post install, env INIT_CWD", process.env.INIT_CWD);
   const appDir = searchAppDir(process.env.INIT_CWD || "");
 
   if (appDir && (existsSync(join(appDir, "xclap.js")) || existsSync(join(appDir, "xclap.ts")))) {

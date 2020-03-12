@@ -1,5 +1,7 @@
+const moduleDev = require("../..");
+
 describe("sample", function() {
-  it("should pass", () => {
-    expect(true).to.equal(true);
+  it("should load tasks function", () => {
+    expect(moduleDev).to.be.a("function");
   });
 });

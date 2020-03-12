@@ -191,6 +191,52 @@ mkdir src</code></pre>
 					<h2><a href="https://typedoc.org/">typedoc</a> Support</h2>
 				</a>
 				<p>If you&#39;ve enabled <a href="https://www.typescriptlang.org/">TypeScript</a>, then <a href="https://typedoc.org/">typedoc</a> is added to automatically generate HTML in <code>docs</code> from your <a href="https://jsdoc.app/">jsdoc</a> in your code in the <code>src</code> directory.</p>
+				<p>To generate the docs manually, run <code>npm run docs</code>. And then open <code>docs/index.html</code> to see the generated HTML docs.</p>
+				<a href="#compiling-jsx" id="compiling-jsx" style="color: inherit; text-decoration: none;">
+					<h2>Compiling JSX</h2>
+				</a>
+				<p>You can add JSX support by updating your <code>tsconfig.json</code> with following options:</p>
+				<pre><code class="language-js">{
+  <span class="hljs-attr">compilerOptions</span>: {
+    <span class="hljs-string">"jsx"</span>: <span class="hljs-string">"react"</span>
+  }
+}</code></pre>
+				<a href="#react" id="react" style="color: inherit; text-decoration: none;">
+					<h3>React</h3>
+				</a>
+				<ul>
+					<li>To compile React JSX components:</li>
+				</ul>
+				<ol>
+					<li>Add <a href="https://reactjs.org/">react</a> to your dependencies: <code>npm install react</code></li>
+				</ol>
+				<a href="#preact" id="preact" style="color: inherit; text-decoration: none;">
+					<h3>Preact</h3>
+				</a>
+				<ul>
+					<li>To compile Preact JSX components:</li>
+				</ul>
+				<ol>
+					<li>Add <a href="https://preactjs.com/">preact</a> to your dependencies: <code>npm install preact</code></li>
+					<li>Add <code>dom</code> to <code>compilerOptions.lib</code> in your tsconfig:</li>
+				</ol>
+				<pre><code class="language-js">{
+  <span class="hljs-string">"compilerOptions"</span>: {
+    <span class="hljs-string">"lib"</span>: [<span class="hljs-string">"dom"</span>]
+  }
+}</code></pre>
+				<a href="#additional-targets" id="additional-targets" style="color: inherit; text-decoration: none;">
+					<h2>Additional Targets</h2>
+				</a>
+				<p>If you need to compile your <code>src</code> to multiple targets, you can do this by:</p>
+				<ol>
+					<li>Make a copy of <code>tsconfig.json</code> for your target. ie: <code>tsconfig.es5.json</code></li>
+					<li>Add a <code>npm scripts</code> to run <code>tsc</code> with <code>--build</code> option. ie: <code>tsc --build tsconfig.es5.json</code></li>
+					<li>Update <code>build</code> script to have <code>xclap</code> run your new compile script. So if you named it <code>compile.es5</code>, your <code>build</code> would be: <code>clap -n compile compile.es5</code></li>
+				</ol>
+				<ul>
+					<li>In your additional target config, you don&#39;t need <code>tsc</code> to generate the <code>.d.ts</code> files. You can turn it off by setting <code>declaration</code> to <code>false</code></li>
+				</ul>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
 					<h2>License</h2>
 				</a>
@@ -205,7 +251,7 @@ mkdir src</code></pre>
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_arch_clap_.html">&quot;arch-<wbr>clap&quot;</a>
+						<a href="modules/_module_dev_.html">&quot;module-<wbr>dev&quot;</a>
 					</li>
 				</ul>
 			</nav>
