@@ -614,11 +614,13 @@ export function loadTasks(xclapOrOptions: object | XarcModuleDevOptions = { xcla
   const cname = xclapOrOptions.constructor.name;
   if (cname === "XClap") {
     options = { xclap: xclapOrOptions };
+  } else if (!options.xclap) {
+    options = { ...options, xclap };
   }
 
   setupPath();
 
-  (options.xclap || xclap).load("xarc", makeTasks(options));
+  options.xclap.load("xarc", makeTasks(options));
 }
 
 export { loadTasks as default };

@@ -89,6 +89,7 @@
       "*clap.ts",
       "coverage",
       "dist",
+      "docs",
       "gulpfile.js",
       "test"
     ],

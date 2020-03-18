@@ -177,12 +177,13 @@ You can add JSX support by updating your `tsconfig.json` with following options:
 - To compile Preact JSX components:
 
 1. Add [preact] to your dependencies: `npm install preact`
-2. Add `dom` to `compilerOptions.lib` in your tsconfig:
+2. Update `compilerOptions` in `tsconfig.json`:
 
 ```js
 {
   "compilerOptions": {
-    "lib": ["dom"]
+    "lib": ["dom"],
+    "jsxFactory": "h"
   }
 }
 ```
