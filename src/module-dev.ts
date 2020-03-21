@@ -489,7 +489,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         const noTs = "--no-typescript";
         const eslint = "--eslint";
         const noTd = "--no-typedoc";
-        const xtra = _.without(this.argv, noTs, eslint, noTd, "init");
+        const xtra = _.without(this.argv.slice(1), noTs, eslint, noTd);
         if (xtra.length > 0) {
           throw new Error(`Unknown options for init task ${xtra.join(", ")}`);
         }
@@ -620,7 +620,7 @@ export function loadTasks(xclapOrOptions: object | XarcModuleDevOptions = { xcla
 
   setupPath();
 
-  options.xclap.load("xarc", makeTasks(options));
+  options.xclap.load("xarc", makeTasks(options), -10);
 }
 
 export { loadTasks as default };
