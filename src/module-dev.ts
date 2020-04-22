@@ -579,8 +579,14 @@ function makeTasks(options: XarcModuleDevOptions) {
     };
 
     Object.assign(tasks, lintTasks);
+  } else if (options.enableLinting === false) {
+    Object.assign(tasks, {
+      lint: "echo linting is disabled by option enableLinting set to false in your xclap.[ts|js]."
+    });
   } else {
-    Object.assign(tasks, { lint: "echo linting is disabled by option enableLinting set to false" });
+    Object.assign(tasks, {
+      lint: `echo linting is disabled because eslint is not setup.  Run 'npx clap eslint' to setup.`
+    });
   }
 
   return tasks;
