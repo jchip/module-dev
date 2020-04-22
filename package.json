@@ -34,14 +34,9 @@
     "typescript"
   ],
   "dependencies": {
-    "chai": "^4.2.0",
     "filter-scan-dir": "^1.0.10",
     "lodash": "^4.17.15",
-    "mocha": "^7.1.0",
-    "nyc": "^15.0.0",
-    "sinon": "^7.2.6",
-    "sinon-chai": "^3.3.0",
-    "xclap": "^0.2.45",
+    "xclap": "^0.2.48",
     "xsh": "^0.4.4"
   },
   "devDependencies": {

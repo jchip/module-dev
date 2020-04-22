@@ -35,6 +35,18 @@ const eslintTSDevDeps = {
   "@typescript-eslint/parser": "^2.21.0"
 };
 
+const mochaDevDeps = {
+  "@types/chai": "^4.2.11",
+  "@types/mocha": "^7.0.2",
+  "@types/sinon": "^9.0.0",
+  "@types/sinon-chai": "^3.2.4",
+  chai: "^4.2.0",
+  mocha: "^7.1.0",
+  sinon: "^7.2.6",
+  "sinon-chai": "^3.3.0",
+  nyc: "^15.0.0"
+};
+
 /**
  * User configurable options for @xarc/module-dev tasks
  */
@@ -176,10 +188,17 @@ node_modules
     }
   }
 
+  _checkFeatures(...features: string[]) {
+    return {
+      isTs: features.includes("typescript"),
+      isEslint: features.includes("eslint"),
+      isTypedoc: features.includes("typedoc"),
+      isMocha: features.includes("mocha")
+    };
+  }
+
   addDevDeps(...features: string[]) {
-    const isTs = features.includes("typescript");
-    const isEslint = features.includes("eslint");
-    const isTypedoc = features.includes("typedoc");
+    const { isTs, isEslint, isTypedoc, isMocha } = this._checkFeatures(...features);
 
     if (isTs) {
       this.addDevDepsToAppPkg(typeScriptDevDeps);
@@ -202,6 +221,10 @@ node_modules
       }
     }
 
+    if (isMocha) {
+      this.addDevDepsToAppPkg(mochaDevDeps);
+    }
+
     if (this.saveAppPkgJson()) {
       const x = features.join(", ");
       console.log(`INFO: ${x} dependencies added to your package.json, please install modules again.
@@ -210,9 +233,7 @@ node_modules
   }
 
   rmDevDeps(...features: string[]) {
-    const isTs = features.includes("typescript");
-    const isEslint = features.includes("eslint");
-    const isTypedoc = features.includes("typedoc");
+    const { isTs, isEslint, isTypedoc, isMocha } = this._checkFeatures(...features);
 
     if (isTs) {
       this.rmDevDepsFromAppPkg(typeScriptDevDeps);
@@ -228,6 +249,10 @@ node_modules
 
     if (isTs || isEslint) {
       this.rmDevDepsFromAppPkg(eslintTSDevDeps);
+    }
+
+    if (isMocha) {
+      this.rmDevDepsFromAppPkg(mochaDevDeps);
     }
 
     if (this.saveAppPkgJson()) {
@@ -481,15 +506,20 @@ function makeTasks(options: XarcModuleDevOptions) {
       desc: "Add config and deps to your project for eslint support",
       task: ["add-eslint-deps"]
     },
+    mocha: {
+      desc: "Add config and deps to your project for mocha/sinon support",
+      task: ["add-mocha-deps", () => xarcModuleDev.setupMocha()]
+    },
     init: {
       desc: `Bootstrap a project for development with @xarc/module-dev
-          Options: --no-typescript --no-typedoc --eslint`,
+          Options: --no-typescript --no-typedoc --no-mocha --eslint`,
       task() {
         const initTasks: (Function | string)[] = [];
         const noTs = "--no-typescript";
         const eslint = "--eslint";
         const noTd = "--no-typedoc";
-        const xtra = _.without(this.argv.slice(1), noTs, eslint, noTd);
+        const noMocha = "--no-mocha";
+        const xtra = _.without(this.argv.slice(1), noTs, eslint, noTd, noMocha);
         if (xtra.length > 0) {
           throw new Error(`Unknown options for init task ${xtra.join(", ")}`);
         }
@@ -502,11 +532,13 @@ function makeTasks(options: XarcModuleDevOptions) {
         if (!this.argv.includes(noTd)) {
           initTasks.push("typedoc");
         }
+        if (!this.argv.includes(noMocha)) {
+          initTasks.push("mocha");
+        }
         initTasks.push(() => {
           xarcModuleDev.loadAppPkg();
           xarcModuleDev.setupXclapFile();
           xarcModuleDev.setupPublishingConfig();
-          xarcModuleDev.setupMocha();
           xarcModuleDev.setupGitIgnore();
         });
         return serial(initTasks);
@@ -528,7 +560,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         return ".test-only";
       }
     },
-    ".test-only": `mocha -c test/spec`,
+    ".test-only": `mocha --extension ts,js,cjs,mjs -c test/spec`,
     ".test-cov": `nyc clap -q test-only`,
     "test-cov": {
       desc: "Use nyc to generate coverage for tests (add nyc config to your package.json)",
@@ -549,6 +581,11 @@ function makeTasks(options: XarcModuleDevOptions) {
       desc: "Add dependencies for eslint support to your package.json",
       task: () => xarcModuleDev.addDevDeps("eslint")
     },
+
+    "add-mocha-deps": {
+      desc: "Add dependencies for mocha/chai/sinon/nyc support to your package.json",
+      task: () => xarcModuleDev.addDevDeps("mocha")
+    },
     "rm-typescript-deps": {
       desc: "Remove dependencies for typescript support from your package.json",
       task: () => xarcModuleDev.rmDevDeps("typescript")
@@ -556,6 +593,10 @@ function makeTasks(options: XarcModuleDevOptions) {
     "rm-eslint-deps": {
       desc: "Remove dependencies for eslint support from your package.json",
       task: () => xarcModuleDev.rmDevDeps("eslint")
+    },
+    "rm-mocha-deps": {
+      desc: "Remove dependencies for mocha/chai/sinon/nyc support from your package.json",
+      task: () => xarcModuleDev.rmDevDeps("mocha")
     }
   };
 
