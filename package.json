@@ -8,7 +8,8 @@
     "build": "clap -n compile",
     "test": "clap -n xarc/test",
     "compile": "tsc",
-    "prepublishOnly": "clap -n compile docs",
+    "preversion": "clap -n compile docs",
+    "prepublishOnly": "clap check",
     "postinstall": "node install.js",
     "docs": "typedoc --excludeNotExported --out docs src"
   },

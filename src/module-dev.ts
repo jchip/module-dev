@@ -363,16 +363,17 @@ node_modules
     }
     const scripts = this.appPkg.scripts || {};
     this.appPkg.scripts = scripts;
-    const prepublishTasks = ["build"];
+    const preversionTasks = ["build"];
     if (this.hasTypedoc) {
-      prepublishTasks.push("docs");
+      preversionTasks.push("docs");
     }
     this.appPkg.scripts = _.merge({}, scripts, {
       build: "tsc",
-      prepublishOnly: `clap -n ${prepublishTasks.join(" ")}`
+      preversion: `clap -n ${preversionTasks.join(" ")}`,
+      prepublishOnly: `clap check`
     });
     if (this.saveAppPkgJson()) {
-      console.log(`INFO: added build and prepublishOnly npm scripts for your typescript.`);
+      console.log(`INFO: added npm scripts for your typescript and release lifecycle.`);
     }
   }
 
