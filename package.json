@@ -11,7 +11,7 @@
     "preversion": "clap -n compile docs",
     "prepublishOnly": "clap check",
     "postinstall": "node install.js",
-    "docs": "typedoc --excludeNotExported --out docs src"
+    "docs": "typedoc --excludeNotExported --gitRevision $(git rev-list -1 HEAD src | cut -b1-8) --out docs src"
   },
   "repository": {
     "type": "git",
@@ -53,7 +53,7 @@
     "prettier": "^1.19.1",
     "source-map-support": "^0.5.16",
     "ts-node": "^8.6.2",
-    "typedoc": "^0.16.11",
+    "typedoc": "^0.17.4",
     "typescript": "^3.8.3"
   },
   "prettier": {
