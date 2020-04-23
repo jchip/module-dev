@@ -8,10 +8,10 @@
     "build": "clap -n compile",
     "test": "clap -n xarc/test",
     "compile": "tsc",
-    "preversion": "clap -n compile docs",
+    "preversion": "clap -n compile xarc/docs",
     "prepublishOnly": "clap check",
     "postinstall": "node install.js",
-    "docs": "typedoc --excludeNotExported --gitRevision $(git rev-list -1 HEAD src | cut -b1-8) --out docs src"
+    "docs": "clap xarc/docs"
   },
   "repository": {
     "type": "git",

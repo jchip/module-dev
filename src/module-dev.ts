@@ -385,7 +385,7 @@ node_modules
     const scripts = this.appPkg.scripts || {};
     this.appPkg.scripts = scripts;
     _.defaults(scripts, {
-      docs: `typedoc --excludeNotExported --out docs src`
+      docs: `clap xarc/docs`
     });
     if (this.saveAppPkgJson()) {
       console.log(`INFO: added docs npm scripts for your typescript.`);
@@ -483,6 +483,20 @@ function makeTasks(options: XarcModuleDevOptions) {
   const tasks = {
     test: ["lint", "test-only"],
     check: ["lint", "test-cov"],
+    docs: {
+      desc: "Generate docs from typedoc comments",
+      async task() {
+        const { stdout } = await xsh.exec("git rev-list -1 HEAD src", true);
+        const commitId = stdout
+          .split("\n")[0]
+          .trim()
+          .substr(0, 8);
+
+        return xclap.exec(`typedoc --excludeNotExported --gitRevision ${commitId} --out docs src`, {
+          flags: "tty"
+        });
+      }
+    },
     typescript: {
       desc: "Add config and deps to your project for typescript support",
       task: [
