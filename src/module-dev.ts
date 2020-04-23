@@ -7,7 +7,7 @@ import * as xclap from "xclap";
 import * as _ from "lodash";
 
 const typedocDeps = {
-  typedoc: "^0.16.11"
+  typedoc: "^0.17.4"
 };
 
 const typeScriptDevDeps = {
@@ -363,15 +363,15 @@ node_modules
     }
     const scripts = this.appPkg.scripts || {};
     this.appPkg.scripts = scripts;
-    const preversionTasks = ["build"];
+    const prepublishTasks = ["build"];
     if (this.hasTypedoc) {
-      preversionTasks.push("docs");
+      prepublishTasks.push("docs");
     }
-    this.appPkg.scripts = _.merge({}, scripts, {
+    this.appPkg.scripts = {
       build: "tsc",
-      preversion: `clap -n ${preversionTasks.join(" ")}`,
-      prepublishOnly: `clap check`
-    });
+      ...scripts,
+      prepublishOnly: `clap -n ${prepublishTasks.join(" ")} && clap check`
+    };
     if (this.saveAppPkgJson()) {
       console.log(`INFO: added npm scripts for your typescript and release lifecycle.`);
     }
