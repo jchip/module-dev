@@ -154,6 +154,36 @@ If you've enabled [TypeScript], then [typedoc] is added to automatically generat
 
 To generate the docs manually, run `npm run docs`. And then open `docs/index.html` to see the generated HTML docs.
 
+### Fix [typedoc] externals
+
+[typedoc] treats every filenames as a module and that doesn't work well with the practice of one class per file.
+
+To customize modules for [typedoc], install the module `typedoc-plugin-external-module-name`.
+
+Then in the `.ts` files:
+
+- Use the following command to assign a file to a module.
+
+```js
+/**
+ * @packageDocumentation
+ * @module index
+ */
+```
+
+- Use the following command to ignore a file:
+
+```js
+/** @ignore */ /** */
+```
+
+- Use the following command before any `export` to ignore it.
+
+```js
+/** @ignore */
+export function internallySharedFunction() {}
+```
+
 ## Compiling JSX
 
 You can add JSX support by updating your `tsconfig.json` with following options:

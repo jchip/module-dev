@@ -192,6 +192,28 @@ mkdir src</code></pre>
 				</a>
 				<p>If you&#39;ve enabled <a href="https://www.typescriptlang.org/">TypeScript</a>, then <a href="https://typedoc.org/">typedoc</a> is added to automatically generate HTML in <code>docs</code> from your <a href="https://jsdoc.app/">jsdoc</a> in your code in the <code>src</code> directory.</p>
 				<p>To generate the docs manually, run <code>npm run docs</code>. And then open <code>docs/index.html</code> to see the generated HTML docs.</p>
+				<a href="#fix-typedoc-externals" id="fix-typedoc-externals" style="color: inherit; text-decoration: none;">
+					<h3>Fix <a href="https://typedoc.org/">typedoc</a> externals</h3>
+				</a>
+				<p><a href="https://typedoc.org/">typedoc</a> treats every filenames as a module and that doesn&#39;t work well with the practice of one class per file.</p>
+				<p>To customize modules for <a href="https://typedoc.org/">typedoc</a>, install the module <code>typedoc-plugin-external-module-name</code>.</p>
+				<p>Then in the <code>.ts</code> files:</p>
+				<ul>
+					<li>Use the following command to assign a file to a module.</li>
+				</ul>
+				<pre><code class="language-js"><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@packageDocumentation</span>
+ * <span class="hljs-doctag">@module <span class="hljs-variable">index</span></span>
+ */</span></code></pre>
+				<ul>
+					<li>Use the following command to ignore a file:</li>
+				</ul>
+				<pre><code class="language-js"><span class="hljs-comment">/** <span class="hljs-doctag">@ignore </span>*/</span> <span class="hljs-comment">/** */</span></code></pre>
+				<ul>
+					<li>Use the following command before any <code>export</code> to ignore it.</li>
+				</ul>
+				<pre><code class="language-js"><span class="hljs-comment">/** <span class="hljs-doctag">@ignore </span>*/</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">internallySharedFunction</span>(<span class="hljs-params"></span>) </span>{}</code></pre>
 				<a href="#compiling-jsx" id="compiling-jsx" style="color: inherit; text-decoration: none;">
 					<h2>Compiling JSX</h2>
 				</a>
