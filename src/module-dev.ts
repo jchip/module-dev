@@ -575,7 +575,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         return ".test-only";
       }
     },
-    ".test-only": `mocha --extension ts,js,cjs,mjs -c test/spec`,
+    ".test-only": `mocha --extension ts,js,tsx,jsx,cjs,mjs -c test/spec`,
     ".test-cov": `nyc clap -q test-only`,
     "test-cov": {
       desc: "Use nyc to generate coverage for tests (add nyc config to your package.json)",
@@ -625,12 +625,12 @@ function makeTasks(options: XarcModuleDevOptions) {
     }
 
     const lintTasks = {
-      ".lint-src-ts": `eslint -c ${eslintDir}/.eslintrc-node-ts src --ext .ts,.tsx --color`,
-      ".lint-src-js": `eslint -c ${eslintDir}/.eslintrc-node src --ext .js,.jsx --color`,
-      ".lint-lib-ts": `eslint -c ${eslintDir}/.eslintrc-node-ts lib --ext .ts,.tsx --color`,
-      ".lint-lib-js": `eslint -c ${eslintDir}/.eslintrc-node lib --ext .js,.jsx --color`,
-      ".lint-test-ts": `eslint -c ${eslintDir}/.eslintrc-test-ts test/spec --ext .ts,.tsx --color`,
-      ".lint-test-js": `eslint -c ${eslintDir}/.eslintrc-test test/spec --ext .js,.jsx --color`,
+      ".lint-src-ts": `eslint -c ${eslintDir}/.eslintrc-node-ts src --ext .ts,.tsx --color --no-error-on-unmatched-pattern`,
+      ".lint-src-js": `eslint -c ${eslintDir}/.eslintrc-node src --ext .js,.jsx --color --no-error-on-unmatched-pattern`,
+      ".lint-lib-ts": `eslint -c ${eslintDir}/.eslintrc-node-ts lib --ext .ts,.tsx --color --no-error-on-unmatched-pattern`,
+      ".lint-lib-js": `eslint -c ${eslintDir}/.eslintrc-node lib --ext .js,.jsx --color --no-error-on-unmatched-pattern`,
+      ".lint-test-ts": `eslint -c ${eslintDir}/.eslintrc-test-ts test/spec --ext .ts,.tsx --color --no-error-on-unmatched-pattern`,
+      ".lint-test-js": `eslint -c ${eslintDir}/.eslintrc-test test/spec --ext .js,.jsx --color --no-error-on-unmatched-pattern`,
       lint: [invokeLint()]
     };
 
