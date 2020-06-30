@@ -2,6 +2,7 @@
 extends:
   - "walmart/configurations/es6-node"
   - "walmart/configurations/es6-test"
+  - "./.eslintrc-base"
 
 globals:
   expect: false

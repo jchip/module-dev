@@ -1,0 +1,6 @@
+---
+rules:
+  "arrow-parens": 0
+  "comma-dangle": 0
+  "prefer-template": 0
+  "@typescript-eslint/no-var-requires": 0
