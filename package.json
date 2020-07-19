@@ -6,11 +6,11 @@
   "description": "Support for developing node.js modules with mocha/eslint/typescript",
   "scripts": {
     "build": "tsc",
-    "test": "clap -n xarc/test",
+    "test": "xrun xarc/test",
     "compile": "tsc",
     "postinstall": "node install.js",
-    "docs": "clap xarc/docs",
-    "prepublishOnly": "clap -n build docs && clap check"
+    "docs": "xrun xarc/docs",
+    "prepublishOnly": "xrun [[build, docs], xarc/check]"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,8 @@
   "files": [
     "config",
     "dist",
-    "install.js"
+    "install.js",
+    "src"
   ],
   "keywords": [
     "node",
@@ -34,10 +35,10 @@
     "typescript"
   ],
   "dependencies": {
+    "@xarc/run": "^1.0.0",
     "filter-scan-dir": "^1.0.10",
-    "lodash": "^4.17.15",
-    "xclap": "^0.2.48",
-    "xsh": "^0.4.4"
+    "lodash": "^4.17.19",
+    "xsh": "^0.4.5"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",

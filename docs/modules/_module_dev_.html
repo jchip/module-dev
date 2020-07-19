@@ -102,7 +102,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="xarcmoduledevoptions" class="tsd-anchor"></a>
 					<h3>Xarc<wbr>Module<wbr>Dev<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">Xarc<wbr>Module<wbr>Dev<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>enableLinting<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>forceColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>tsConfig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>xclap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Xarc<wbr>Module<wbr>Dev<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>enableLinting<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>forceColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>tsConfig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>xclap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>xrun<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/d87a33b5/src/module-dev.ts#L53">module-dev.ts:53</a></li>
@@ -144,7 +144,15 @@
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> xclap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
-										<p>Specify a XClap instance to use - <em>default</em> <code>require(&quot;xclap&quot;)</code></p>
+										<p>alternative for xrun (for backward compat only, do not use in new code)</p>
+									</div>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> xrun<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Specify a XRun instance to use - <em>default</em> <code>require(&quot;@xarc/npm-run&quot;)</code></p>
 									</div>
 								</div>
 							</li>
@@ -158,31 +166,31 @@
 					<a name="loadtasks" class="tsd-anchor"></a>
 					<h3>load<wbr>Tasks</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">load<wbr>Tasks<span class="tsd-signature-symbol">(</span>xclapOrOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">load<wbr>Tasks<span class="tsd-signature-symbol">(</span>xrunOrOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/d87a33b5/src/module-dev.ts#L673">module-dev.ts:673</a></li>
+									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/d87a33b5/src/module-dev.ts#L675">module-dev.ts:675</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Load XClap build tasks for developing node.js modules.</p>
+									<p>Load @xarc/npm-run build tasks for developing node.js modules.</p>
 								</div>
-								<p>See document for xclap at <a href="https://www.npmjs.com/package/xclap">https://www.npmjs.com/package/xclap</a></p>
-								<p>To use, create a file <code>xclap.js</code>:</p>
+								<p>See document for @xarc/npm-run at <a href="https://www.npmjs.com/package/@xarc/npm-run">https://www.npmjs.com/package/@xarc/npm-run</a></p>
+								<p>To use, create a file <code>xrun-tasks.js</code>:</p>
 								<pre><code class="language-js">  <span class="hljs-built_in">require</span>(<span class="hljs-string">"@xarc/module-dev"</span>)()</code></pre>
-								<p>or <code>xclap.ts</code> for typescript:</p>
+								<p>or <code>xrun-tasks.ts</code> for typescript:</p>
 								<pre><code class="language-ts">  <span class="hljs-keyword">import</span> loadTasks <span class="hljs-keyword">from</span> <span class="hljs-string">"@xarc/module-dev"</span>;
   loadTasks();</code></pre>
-								<p>Then run the command <code>npx clap</code> to see available build tasks.</p>
+								<p>Then run the command <code>npx xrun</code> to see available build tasks.</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> xclapOrOptions: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol"> = { xclap }</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> xrunOrOptions: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol"> = { xrun }</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>options</p>
 									</div>

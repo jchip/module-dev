@@ -30,12 +30,15 @@ function searchAppDir(dir: string, depth = 0): string {
 
 /**
  * Show instructions on bootstrapping a project after npm install if project
- * doesn't have xclap.js or xclap.ts files yet.
+ * doesn't have xrun-tasks.js or xrun-tasks.ts files yet.
  */
 function installSetup(): void {
   const appDir = searchAppDir(process.env.INIT_CWD || "");
 
-  if (appDir && (existsSync(join(appDir, "xclap.js")) || existsSync(join(appDir, "xclap.ts")))) {
+  if (
+    appDir &&
+    (existsSync(join(appDir, "xrun-tasks.js")) || existsSync(join(appDir, "xrun-tasks.ts")))
+  ) {
     return;
   }
 
@@ -43,7 +46,7 @@ function installSetup(): void {
 
 To bootstrap your project, run:
 
-    npx clap --require @xarc/module-dev init [options]
+    npx xrun --require @xarc/module-dev init [options]
 
 Options:
 

@@ -30,23 +30,23 @@ npm install --save-dev @xarc/module-dev
 2. Bootstrap: then to bootstrap your project, use the following commands:
 
 ```sh
-npx clap --require @xarc/module-dev init
+npx xrun --require @xarc/module-dev init
 npm install
 ```
 
-- `init` takes the following options. ie: `npx clap --require @xarc/module-dev init --eslint`
+- `init` takes the following options. ie: `npx xrun --require @xarc/module-dev init --eslint`
 
   - `--no-typescript` - bootstrap without typescript support.
   - `--eslint` - bootstrap with eslint support.
 
-3. Now you can run `npx clap` to see a list of build tasks available for developing your node.js module.
+3. Now you can run `npx xrun` to see a list of build tasks available for developing your node.js module.
 
-### xclap-cli
+### @xarc/run-cli
 
-If you want to be able to run `clap` directly instead of having to do `npx clap`, then you can install globally a simple package [xclap-cli] with the following command.
+If you want to be able to run `xrun` directly instead of having to do `npx xrun`, then you can install globally a simple package [@xarc/run-cli] with the following command.
 
 ```sh
-$ npm install -g xclap-cli
+$ npm install -g @xarc/run-cli
 ```
 
 ## Project Structure
@@ -87,9 +87,9 @@ Once you start writing your code, either as [TypeScript] in `src` or JavaScript 
 
 The following are common build tasks that you would use:
 
-- Run linting and tests: `npx clap test`
-- Run tests without linting: `npx clap test-only`
-- Run linting and tests with coverage: `npx clap check`
+- Run linting and tests: `npx xrun test`
+- Run tests without linting: `npx xrun test-only`
+- Run linting and tests with coverage: `npx xrun check`
 
 Your [TypeScript] tests should import your TS code from `src` directly.
 
@@ -113,7 +113,7 @@ For [TypeScript], your code from `src` directory is not included. If you want to
 If you boostrapped your project without [TypeScript], but then want to add it later, you can run the `typescript` build task any time:
 
 ```sh
-npx clap typescript
+npx xrun typescript
 npm install
 mkdir src
 ```
@@ -126,11 +126,11 @@ After this module created `tsconfig.json` for you, you can change it as you like
 
 ## [eslint] Support
 
-If you didn't bootstrap your project with [eslint] support, you can always add it later by running `npx clap eslint`, and then `npm install`.
+If you didn't bootstrap your project with [eslint] support, you can always add it later by running `npx xrun eslint`, and then `npm install`.
 
-You can also invoke the linting task with `npx clap lint`
+You can also invoke the linting task with `npx xrun lint`
 
-The build task `check` will run linting also. You can invoke it with `npx clap check`.
+The build task `check` will run linting also. You can invoke it with `npx xrun check`.
 
 If you need to disable certain eslint rules for a specific source file, you can add the following comment to the top of your file.
 
@@ -224,7 +224,7 @@ If you need to compile your `src` to multiple targets, you can do this by:
 
 1. Make a copy of `tsconfig.json` for your target. ie: `tsconfig.es5.json`
 2. Add a `npm scripts` to run `tsc` with `--build` option. ie: `tsc --build tsconfig.es5.json`
-3. Update `build` script to have `xclap` run your new compile script. So if you named it `compile.es5`, your `build` would be: `clap -n compile compile.es5`
+3. Update `build` script to have `xrun` run your new compile script. So if you named it `compile.es5`, your `build` would be: `xrun -n compile compile.es5`
 
 - In your additional target config, you don't need `tsc` to generate the `.d.ts` files. You can turn it off by setting `declaration` to `false`
 
@@ -234,7 +234,7 @@ Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses
 
 ---
 
-[xclap-cli]: https://www.npmjs.com/package/xclap-cli
+[@xarc/run-cli]: https://www.npmjs.com/package/@xarc/run-cli
 [typescript]: https://www.typescriptlang.org/
 [eslint]: https://eslint.org/
 [mocha]: https://mochajs.org/

@@ -227,3 +227,5 @@ test/mocha.opts
 *-lock*
 dist
 
+.vscode
+tmp
