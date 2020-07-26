@@ -88,10 +88,10 @@ npm install --save-dev @xarc/module-dev</code></pre>
 				<ol start="2">
 					<li>Bootstrap: then to bootstrap your project, use the following commands:</li>
 				</ol>
-				<pre><code class="language-sh">npx clap --require @xarc/module-dev init
+				<pre><code class="language-sh">npx xrun --require @xarc/module-dev init
 npm install</code></pre>
 				<ul>
-					<li><p><code>init</code> takes the following options. ie: <code>npx clap --require @xarc/module-dev init --eslint</code></p>
+					<li><p><code>init</code> takes the following options. ie: <code>npx xrun --require @xarc/module-dev init --eslint</code></p>
 						<ul>
 							<li><code>--no-typescript</code> - bootstrap without typescript support.</li>
 							<li><code>--eslint</code> - bootstrap with eslint support.</li>
@@ -99,13 +99,13 @@ npm install</code></pre>
 					</li>
 				</ul>
 				<ol start="3">
-					<li>Now you can run <code>npx clap</code> to see a list of build tasks available for developing your node.js module.</li>
+					<li>Now you can run <code>npx xrun</code> to see a list of build tasks available for developing your node.js module.</li>
 				</ol>
-				<a href="#xclap-cli" id="xclap-cli" style="color: inherit; text-decoration: none;">
-					<h3>xclap-cli</h3>
+				<a href="#xarcrun-cli" id="xarcrun-cli" style="color: inherit; text-decoration: none;">
+					<h3>@xarc/run-cli</h3>
 				</a>
-				<p>If you want to be able to run <code>clap</code> directly instead of having to do <code>npx clap</code>, then you can install globally a simple package <a href="https://www.npmjs.com/package/xclap-cli">xclap-cli</a> with the following command.</p>
-				<pre><code class="language-sh">$ npm install -g xclap-cli</code></pre>
+				<p>If you want to be able to run <code>xrun</code> directly instead of having to do <code>npx xrun</code>, then you can install globally a simple package <a href="https://www.npmjs.com/package/@xarc/run-cli">@xarc/run-cli</a> with the following command.</p>
+				<pre><code class="language-sh">$ npm install -g @xarc/run-cli</code></pre>
 				<a href="#project-structure" id="project-structure" style="color: inherit; text-decoration: none;">
 					<h2>Project Structure</h2>
 				</a>
@@ -137,9 +137,9 @@ test/
 				<p>Once you start writing your code, either as <a href="https://www.typescriptlang.org/">TypeScript</a> in <code>src</code> or JavaScript in <code>lib</code>, you should put your tests in the directory <code>test/spec</code> as <code>*.spec.js</code> or <code>*.spec.ts</code> files.</p>
 				<p>The following are common build tasks that you would use:</p>
 				<ul>
-					<li>Run linting and tests: <code>npx clap test</code></li>
-					<li>Run tests without linting: <code>npx clap test-only</code></li>
-					<li>Run linting and tests with coverage: <code>npx clap check</code></li>
+					<li>Run linting and tests: <code>npx xrun test</code></li>
+					<li>Run tests without linting: <code>npx xrun test-only</code></li>
+					<li>Run linting and tests with coverage: <code>npx xrun check</code></li>
 				</ul>
 				<p>Your <a href="https://www.typescriptlang.org/">TypeScript</a> tests should import your TS code from <code>src</code> directly.</p>
 				<a href="#publishing" id="publishing" style="color: inherit; text-decoration: none;">
@@ -161,7 +161,7 @@ test/
 					<h2><a href="https://www.typescriptlang.org/">TypeScript</a> Support</h2>
 				</a>
 				<p>If you boostrapped your project without <a href="https://www.typescriptlang.org/">TypeScript</a>, but then want to add it later, you can run the <code>typescript</code> build task any time:</p>
-				<pre><code class="language-sh">npx clap typescript
+				<pre><code class="language-sh">npx xrun typescript
 npm install
 mkdir src</code></pre>
 				<p>And now you can start writing typescript code in the <code>src</code> directory</p>
@@ -172,9 +172,9 @@ mkdir src</code></pre>
 				<a href="#eslint-support" id="eslint-support" style="color: inherit; text-decoration: none;">
 					<h2><a href="https://eslint.org/">eslint</a> Support</h2>
 				</a>
-				<p>If you didn&#39;t bootstrap your project with <a href="https://eslint.org/">eslint</a> support, you can always add it later by running <code>npx clap eslint</code>, and then <code>npm install</code>.</p>
-				<p>You can also invoke the linting task with <code>npx clap lint</code></p>
-				<p>The build task <code>check</code> will run linting also. You can invoke it with <code>npx clap check</code>.</p>
+				<p>If you didn&#39;t bootstrap your project with <a href="https://eslint.org/">eslint</a> support, you can always add it later by running <code>npx xrun eslint</code>, and then <code>npm install</code>.</p>
+				<p>You can also invoke the linting task with <code>npx xrun lint</code></p>
+				<p>The build task <code>check</code> will run linting also. You can invoke it with <code>npx xrun check</code>.</p>
 				<p>If you need to disable certain eslint rules for a specific source file, you can add the following comment to the top of your file.</p>
 				<pre><code class="language-js"><span class="hljs-comment">/* eslint-disable no-console, no-magic-numbers, max-statements */</span></code></pre>
 				<p>This comment disables the following three rules:</p>
@@ -255,7 +255,7 @@ mkdir src</code></pre>
 				<ol>
 					<li>Make a copy of <code>tsconfig.json</code> for your target. ie: <code>tsconfig.es5.json</code></li>
 					<li>Add a <code>npm scripts</code> to run <code>tsc</code> with <code>--build</code> option. ie: <code>tsc --build tsconfig.es5.json</code></li>
-					<li>Update <code>build</code> script to have <code>xclap</code> run your new compile script. So if you named it <code>compile.es5</code>, your <code>build</code> would be: <code>clap -n compile compile.es5</code></li>
+					<li>Update <code>build</code> script to have <code>xrun</code> run your new compile script. So if you named it <code>compile.es5</code>, your <code>build</code> would be: <code>xrun -n compile compile.es5</code></li>
 				</ol>
 				<ul>
 					<li>In your additional target config, you don&#39;t need <code>tsc</code> to generate the <code>.d.ts</code> files. You can turn it off by setting <code>declaration</code> to <code>false</code></li>
@@ -274,7 +274,13 @@ mkdir src</code></pre>
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="modules/_feature_.html">&quot;feature&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="modules/_module_dev_.html">&quot;module-<wbr>dev&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_utils_.html">&quot;utils&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -291,7 +297,11 @@ mkdir src</code></pre>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 			</ul>
 		</div>
 	</div>
