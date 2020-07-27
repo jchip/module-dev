@@ -272,7 +272,7 @@ node_modules
 
     newFeatures = _.uniq(newFeatures);
 
-    for (const f of features) {
+    for (const f of newFeatures) {
       if (!this._features.includes(f)) {
         this._availableFeatures[f].updateToPkg(this._appPkg);
         this._changedFeatures.push(f);
@@ -296,7 +296,7 @@ node_modules
   }
 
   removeFeatures(...features: string[]) {
-    const newFeatures = _.uniq(_.without(this._features, ...features));
+    let newFeatures = _.uniq(_.without(this._features, ...features));
     let removing = [].concat(features);
     // if eslint or typescript are removed, then need to remove eslintTS
     if (!newFeatures.includes("typescript") || !newFeatures.includes("eslint")) {
@@ -308,6 +308,8 @@ node_modules
       removing.push("typedoc");
     }
     removing = _.uniq(removing);
+    // update new features with other dependent features that's removed
+    newFeatures = _.without(newFeatures, ...removing);
 
     for (const f of removing) {
       if (this._features.includes(f)) {
