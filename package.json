@@ -38,6 +38,7 @@
     "@xarc/run": "^1.0.0",
     "filter-scan-dir": "^1.0.10",
     "lodash": "^4.17.19",
+    "tsconfig": "^7.0.0",
     "xsh": "^0.4.5"
   },
   "devDependencies": {

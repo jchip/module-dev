@@ -7,6 +7,8 @@ import * as xrun from "@xarc/run";
 import * as _ from "lodash";
 import { Feature } from "./feature";
 
+import { loadSync } from "tsconfig";
+
 /**
  * User configurable options for @xarc/module-dev tasks
  */
@@ -575,10 +577,18 @@ function makeTasks(options: XarcModuleDevOptions) {
   const lint = options.enableLinting !== false && xarcModuleDev.hasFeature("eslint");
 
   const invokeLint = () => {
+    const tsconfig = loadSync(process.cwd());
+
+    const outDir = _.get(tsconfig, "config.compilerOptions.outDir");
+
     return !lint
       ? []
       : ([] as string[])
-          .concat(...["lib", "src", "test"].map(x => xarcModuleDev.lintTask(x)))
+          .concat(
+            ...[outDir !== "lib" && "lib", "src", "test"]
+              .filter(x => x)
+              .map(x => xarcModuleDev.lintTask(x))
+          )
           .filter(x => x);
   };
 
