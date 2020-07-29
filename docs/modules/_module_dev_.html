@@ -102,10 +102,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="xarcmoduledevoptions" class="tsd-anchor"></a>
 					<h3>Xarc<wbr>Module<wbr>Dev<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">Xarc<wbr>Module<wbr>Dev<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>enableLinting<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>forceColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>tsConfig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>xclap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>xrun<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Xarc<wbr>Module<wbr>Dev<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>enableLinting<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>forceColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>srcDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>tsConfig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>xclap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>xrun<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/0aabe2da/src/module-dev.ts#L13">module-dev.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/bb41c378/src/module-dev.ts#L15">module-dev.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -129,6 +129,20 @@
 								<div class="tsd-comment tsd-typography">
 									<div class="lead">
 										<p>force terminal colors in output - <em>default</em> <code>true</code></p>
+									</div>
+								</div>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> src<wbr>Dir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Specify the directories that are considered to contain your source code.</p>
+										<ul>
+											<li>Mainly used for eslint to look for code to run lint on.</li>
+											<li>If this option is not specified then package.json[&quot;@xarc/run&quot;].srcDir is checked.</li>
+											<li>Default: <code>[&quot;src&quot;, &quot;lib&quot;, &quot;test&quot;]</code></li>
+											<li>&quot;lib&quot; is removed from default if tsconfig.json:compilerOptions.outDir is &quot;lib&quot;</li>
+										</ul>
 									</div>
 								</div>
 							</li>
@@ -172,7 +186,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/0aabe2da/src/module-dev.ts#L745">module-dev.ts:745</a></li>
+									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/bb41c378/src/module-dev.ts#L767">module-dev.ts:767</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
