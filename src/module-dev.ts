@@ -23,6 +23,14 @@ export type XarcModuleDevOptions = {
   enableLinting?: boolean;
   /** Specify typescript config to override the default one */
   tsConfig?: Record<string, any>;
+  /**
+   * Specify the directories that are considered to contain your source code.
+   * - Mainly used for eslint to look for code to run lint on.
+   * - If this option is not specified then package.json["@xarc/run"].srcDir is checked.
+   * - Default: `["src", "lib", "test"]`
+   * - "lib" is removed from default if tsconfig.json:compilerOptions.outDir is "lib"
+   */
+  srcDir?: string[];
 };
 
 /**
@@ -350,7 +358,7 @@ node_modules
     });
   }
 
-  lintTask(dir: string): string[] {
+  lintTask(eslintDir, dir: string): string[] {
     const scanned = filterScanDir.sync({
       dir,
       grouping: true,
@@ -363,10 +371,14 @@ node_modules
     });
     const tasks: string[] = [];
     if (scanned.js) {
-      tasks.push(`.lint-${dir}-js`);
+      tasks.push(
+        `~$eslint -c ${eslintDir}/.eslintrc-node ${dir} --ext .js,.jsx --color --no-error-on-unmatched-pattern`
+      );
     }
     if (this.hasTypescript && scanned.ts) {
-      tasks.push(`.lint-${dir}-ts`);
+      tasks.push(
+        `~$eslint -c ${eslintDir}/.eslintrc-node-ts ${dir} --ext .ts,.tsx --color --no-error-on-unmatched-pattern`
+      );
     }
     return tasks;
   }
@@ -564,6 +576,8 @@ function makeTasks(options: XarcModuleDevOptions) {
     process.env.FORCE_COLOR = "true";
   }
 
+  const { concurrent } = options.xrun || options.xclap;
+
   const xarcModuleDev = new XarcModuleDev(options);
 
   const updateFeature = (remove = false, ...features: string[]) => {
@@ -576,19 +590,23 @@ function makeTasks(options: XarcModuleDevOptions) {
 
   const lint = options.enableLinting !== false && xarcModuleDev.hasFeature("eslint");
 
-  const invokeLint = () => {
+  const invokeLint = eslintDir => {
     const tsconfig = loadSync(process.cwd());
 
     const outDir = _.get(tsconfig, "config.compilerOptions.outDir");
 
+    const srcDir =
+      options.srcDir ||
+      _.get(
+        xarcModuleDev,
+        ["_appPkg", xarcModuleDev._myPkg.name, "srcDir"],
+        [outDir !== "lib" && "lib", "src", "test"]
+      );
+
     return !lint
       ? []
       : ([] as string[])
-          .concat(
-            ...[outDir !== "lib" && "lib", "src", "test"]
-              .filter(x => x)
-              .map(x => xarcModuleDev.lintTask(x))
-          )
+          .concat(...srcDir.filter(x => x).map(x => xarcModuleDev.lintTask(eslintDir, x)))
           .filter(x => x);
   };
 
@@ -707,13 +725,7 @@ function makeTasks(options: XarcModuleDevOptions) {
     }
 
     const lintTasks = {
-      ".lint-src-ts": `eslint -c ${eslintDir}/.eslintrc-node-ts src --ext .ts,.tsx --color --no-error-on-unmatched-pattern`,
-      ".lint-src-js": `eslint -c ${eslintDir}/.eslintrc-node src --ext .js,.jsx --color --no-error-on-unmatched-pattern`,
-      ".lint-lib-ts": `eslint -c ${eslintDir}/.eslintrc-node-ts lib --ext .ts,.tsx --color --no-error-on-unmatched-pattern`,
-      ".lint-lib-js": `eslint -c ${eslintDir}/.eslintrc-node lib --ext .js,.jsx --color --no-error-on-unmatched-pattern`,
-      ".lint-test-ts": `eslint -c ${eslintDir}/.eslintrc-test-ts test/spec --ext .ts,.tsx --color --no-error-on-unmatched-pattern`,
-      ".lint-test-js": `eslint -c ${eslintDir}/.eslintrc-test test/spec --ext .js,.jsx --color --no-error-on-unmatched-pattern`,
-      lint: [invokeLint()]
+      lint: concurrent(...invokeLint(eslintDir))
     };
 
     Object.assign(tasks, lintTasks);
