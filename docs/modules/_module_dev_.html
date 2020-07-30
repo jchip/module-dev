@@ -105,7 +105,7 @@
 					<div class="tsd-signature tsd-kind-icon">Xarc<wbr>Module<wbr>Dev<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>enableLinting<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>forceColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>srcDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>tsConfig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>xclap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>xrun<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/bb41c378/src/module-dev.ts#L15">module-dev.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/945c414e/src/module-dev.ts#L15">module-dev.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -142,6 +142,8 @@
 											<li>If this option is not specified then package.json[&quot;@xarc/run&quot;].srcDir is checked.</li>
 											<li>Default: <code>[&quot;src&quot;, &quot;lib&quot;, &quot;test&quot;]</code></li>
 											<li>&quot;lib&quot; is removed from default if tsconfig.json:compilerOptions.outDir is &quot;lib&quot;</li>
+											<li>The eslint rules used is configured for node.js unless the dirname contains the string &quot;test&quot;,
+											then a eslint config for testing code is used.  (with rules for describe, it etc)</li>
 										</ul>
 									</div>
 								</div>
@@ -186,7 +188,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/bb41c378/src/module-dev.ts#L767">module-dev.ts:767</a></li>
+									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/945c414e/src/module-dev.ts#L771">module-dev.ts:771</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
