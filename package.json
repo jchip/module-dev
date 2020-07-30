@@ -1,6 +1,6 @@
 {
   "name": "@xarc/module-dev",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "main": "index.js",
   "types": "dist/module-dev.d.ts",
   "description": "Support for developing node.js modules with mocha/eslint/typescript",
