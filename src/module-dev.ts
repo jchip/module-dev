@@ -29,6 +29,8 @@ export type XarcModuleDevOptions = {
    * - If this option is not specified then package.json["@xarc/run"].srcDir is checked.
    * - Default: `["src", "lib", "test"]`
    * - "lib" is removed from default if tsconfig.json:compilerOptions.outDir is "lib"
+   * - The eslint rules used is configured for node.js unless the dirname contains the string "test",
+   *   then a eslint config for testing code is used.  (with rules for describe, it etc)
    */
   srcDir?: string[];
 };
@@ -369,15 +371,17 @@ node_modules
         return true;
       }
     });
+
+    const eslintConfig = dir.includes("test") ? ".eslintrc-test" : ".eslintrc-node";
     const tasks: string[] = [];
     if (scanned.js) {
       tasks.push(
-        `~$eslint -c ${eslintDir}/.eslintrc-node ${dir} --ext .js,.jsx --color --no-error-on-unmatched-pattern`
+        `~$eslint -c ${eslintDir}/${eslintConfig} ${dir} --ext .js,.jsx --color --no-error-on-unmatched-pattern`
       );
     }
     if (this.hasTypescript && scanned.ts) {
       tasks.push(
-        `~$eslint -c ${eslintDir}/.eslintrc-node-ts ${dir} --ext .ts,.tsx --color --no-error-on-unmatched-pattern`
+        `~$eslint -c ${eslintDir}/${eslintConfig}-ts ${dir} --ext .ts,.tsx --color --no-error-on-unmatched-pattern`
       );
     }
     return tasks;
