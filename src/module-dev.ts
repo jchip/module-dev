@@ -767,8 +767,11 @@ function makeTasks(options: XarcModuleDevOptions) {
  * Then run the command `npx xrun` to see available build tasks.
  *
  * @param xrunOrOptions options
+ *
+ * @returns xrun - the instance of `@xarc/run` used to load tasks.
+ *
  */
-export function loadTasks(xrunOrOptions: object | XarcModuleDevOptions = { xrun }) {
+export function loadTasks(xrunOrOptions: object | XarcModuleDevOptions = { xrun }): any {
   let options: XarcModuleDevOptions = xrunOrOptions;
 
   const cname = xrunOrOptions.constructor.name;
@@ -780,7 +783,10 @@ export function loadTasks(xrunOrOptions: object | XarcModuleDevOptions = { xrun 
 
   setupPath();
 
-  (options.xrun || options.xclap).load("xarc", makeTasks(options), -10);
+  const xrunInst: any = options.xrun || options.xclap;
+  xrunInst.load("xarc", makeTasks(options), -10);
+
+  return xrunInst;
 }
 
 export { loadTasks as default };
