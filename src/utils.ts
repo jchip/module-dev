@@ -4,7 +4,7 @@
  * @param obj object
  * @returns obj new object with property keys sorted
  */
-export function sortObjKeys<T extends object>(obj: T): T {
+export function sortObjKeys<T extends Record<string, any>>(obj: T): T {
   return (Object.keys(obj) as (keyof T)[]).sort().reduce((newObj, key) => {
     newObj[key] = obj[key];
     return newObj;

@@ -2,7 +2,6 @@
 import * as Path from "path";
 import * as xsh from "xsh";
 import * as Fs from "fs";
-import * as filterScanDir from "filter-scan-dir";
 import * as xrun from "@xarc/run";
 import * as _ from "lodash";
 import { Feature } from "./feature";
@@ -57,7 +56,7 @@ function readAppPkgJson(): Record<string, any> {
  *
  * @param pkg pkg data to write
  */
-function writeAppPkgJson(pkg: {}): void {
+function writeAppPkgJson(pkg: Record<string, any>): void {
   const data = JSON.stringify(pkg, null, 2);
   Fs.writeFileSync(Path.resolve("package.json"), `${data}\n`);
 }
@@ -124,11 +123,13 @@ class XarcModuleDev {
   }
 
   setupAvailableFeatures() {
+    const featuresDep = JSON.parse(
+      Fs.readFileSync(Path.join(__dirname, "../config/features-deps.json")).toString()
+    );
+
     const typedocFeature = new Feature({
       name: "typedoc",
-      devDeps: {
-        typedoc: "^0.17.4"
-      },
+      ...featuresDep.typedoc,
       setup: () => {
         this.setupTypedocScripts();
       }
@@ -136,16 +137,7 @@ class XarcModuleDev {
 
     const typescriptFeature = new Feature({
       name: "typescript",
-      devDeps: {
-        // code coverage
-        "@istanbuljs/nyc-config-typescript": "^1.0.1",
-        "source-map-support": "^0.5.16",
-        // types for node.js
-        "@types/node": "^13.7.6",
-        // compilers
-        "ts-node": "^8.6.2",
-        typescript: "^3.8.3"
-      },
+      ...featuresDep.typescript,
       setup: () => {
         this.setupCompileScripts();
         this.setupTsConfig();
@@ -154,37 +146,17 @@ class XarcModuleDev {
 
     const eslintFeature = new Feature({
       name: "eslint",
-      devDeps: {
-        "babel-eslint": "^10.1.0",
-        eslint: "^6.8.0",
-        "eslint-config-walmart": "^2.2.1",
-        "eslint-plugin-filenames": "^1.1.0",
-        "eslint-plugin-jsdoc": "^21.0.0"
-      }
+      ...featuresDep.eslint
     });
 
     const eslintTSFeature = new Feature({
       name: "eslint-ts",
-      devDeps: {
-        // eslint typescript deps
-        "@typescript-eslint/eslint-plugin": "^2.21.0",
-        "@typescript-eslint/parser": "^2.21.0"
-      }
+      ...featuresDep["eslint-ts"]
     });
 
     const mochaFeature = new Feature({
       name: "mocha",
-      devDeps: {
-        "@types/chai": "^4.2.11",
-        "@types/mocha": "^7.0.2",
-        "@types/sinon": "^9.0.0",
-        "@types/sinon-chai": "^3.2.4",
-        chai: "^4.2.0",
-        mocha: "^7.1.0",
-        sinon: "^7.2.6",
-        "sinon-chai": "^3.3.0",
-        nyc: "^15.0.0"
-      },
+      ...featuresDep.mocha,
       setup: () => {
         this.setupMochaConfig();
         this.setupCoverage();
@@ -358,33 +330,6 @@ node_modules
       const dd = this._appPkg.devDependencies;
       return dd && dd.hasOwnProperty(x);
     });
-  }
-
-  lintTask(eslintDir, dir: string): string[] {
-    const scanned = filterScanDir.sync({
-      dir,
-      grouping: true,
-      filter(file, path, extras) {
-        if ([".ts", ".tsx", ".js", ".jsx"].includes(extras.ext)) {
-          return extras.ext.substr(1, 2);
-        }
-        return true;
-      }
-    });
-
-    const eslintConfig = dir.includes("test") ? ".eslintrc-test" : ".eslintrc-node";
-    const tasks: string[] = [];
-    if (scanned.js) {
-      tasks.push(
-        `~$eslint -c ${eslintDir}/${eslintConfig} ${dir} --ext .js,.jsx --color --no-error-on-unmatched-pattern`
-      );
-    }
-    if (this.hasTypescript && scanned.ts) {
-      tasks.push(
-        `~$eslint -c ${eslintDir}/${eslintConfig}-ts ${dir} --ext .ts,.tsx --color --no-error-on-unmatched-pattern`
-      );
-    }
-    return tasks;
   }
 
   setupTsConfig(): void {
@@ -594,7 +539,11 @@ function makeTasks(options: XarcModuleDevOptions) {
 
   const lint = options.enableLinting !== false && xarcModuleDev.hasFeature("eslint");
 
-  const invokeLint = eslintDir => {
+  const invokeLint = () => {
+    if (!lint) {
+      return [];
+    }
+
     const tsconfig = loadSync(process.cwd());
 
     const outDir = _.get(tsconfig, "config.compilerOptions.outDir");
@@ -607,11 +556,8 @@ function makeTasks(options: XarcModuleDevOptions) {
         [outDir !== "lib" && "lib", "src", "test"]
       );
 
-    return !lint
-      ? []
-      : ([] as string[])
-          .concat(...srcDir.filter(x => x).map(x => xarcModuleDev.lintTask(eslintDir, x)))
-          .filter(x => x);
+    const dirs = [].concat(srcDir).join(" ");
+    return [`~$eslint --ext .js,.jsx,.ts,.tsx --color --no-error-on-unmatched-pattern ${dirs}`];
   };
 
   const tasks = {
@@ -721,18 +667,13 @@ function makeTasks(options: XarcModuleDevOptions) {
 
   /* if linting enable, then add eslint tasks */
   if (lint) {
-    let eslintDir = Path.normalize(`${__dirname}/../config/eslint`);
+    const lintTasks = invokeLint();
 
-    const customDir = Path.resolve("eslint");
-    if (Fs.existsSync(customDir)) {
-      eslintDir = customDir;
+    if (lintTasks.length > 0) {
+      Object.assign(tasks, {
+        lint: concurrent(...lintTasks)
+      });
     }
-
-    const lintTasks = {
-      lint: concurrent(...invokeLint(eslintDir))
-    };
-
-    Object.assign(tasks, lintTasks);
   } else if (options.enableLinting === false) {
     Object.assign(tasks, {
       lint: "echo linting is disabled by option enableLinting set to false in your xrun tasks file."
@@ -771,7 +712,9 @@ function makeTasks(options: XarcModuleDevOptions) {
  * @returns xrun - the instance of `@xarc/run` used to load tasks.
  *
  */
-export function loadTasks(xrunOrOptions: object | XarcModuleDevOptions = { xrun }): any {
+export function loadTasks(
+  xrunOrOptions: Record<string, any> | XarcModuleDevOptions = { xrun }
+): any {
   let options: XarcModuleDevOptions = xrunOrOptions;
 
   const cname = xrunOrOptions.constructor.name;
@@ -789,4 +732,4 @@ export function loadTasks(xrunOrOptions: object | XarcModuleDevOptions = { xrun 
   return xrunInst;
 }
 
-export { loadTasks as default };
+export { loadTasks as default, xrun };

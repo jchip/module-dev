@@ -1,12 +1,12 @@
 {
   "name": "@xarc/module-dev",
   "version": "2.2.5",
-  "main": "index.js",
-  "types": "dist/module-dev.d.ts",
+  "main": "dist/index.js",
   "description": "Support for developing node.js modules with mocha/eslint/typescript",
   "scripts": {
     "build": "tsc",
     "test": "xrun xarc/test",
+    "coverage": "xrun check",
     "compile": "tsc",
     "postinstall": "node install.js",
     "docs": "xrun xarc/docs",
@@ -45,26 +45,26 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^13.7.6",
+    "@types/node": "^14.14.16",
     "@types/sinon": "^9.0.0",
     "@types/sinon-chai": "^3.2.4",
-    "@typescript-eslint/eslint-plugin": "^2.21.0",
-    "@typescript-eslint/parser": "^2.21.0",
+    "@typescript-eslint/eslint-plugin": "^4.11.0",
+    "@typescript-eslint/parser": "^4.11.0",
     "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.16.0",
     "eslint-config-walmart": "^2.2.1",
     "eslint-plugin-filenames": "^1.1.0",
-    "eslint-plugin-jsdoc": "^21.0.0",
+    "eslint-plugin-jsdoc": "^30.7.9",
     "mocha": "^7.1.0",
     "nyc": "^15.0.0",
     "prettier": "^1.19.1",
     "sinon": "^7.2.6",
     "sinon-chai": "^3.3.0",
-    "source-map-support": "^0.5.16",
-    "ts-node": "^8.6.2",
-    "typedoc": "^0.17.4",
-    "typescript": "^3.8.3"
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.1.1",
+    "typedoc": "^0.19.2",
+    "typescript": "^4.1.3"
   },
   "prettier": {
     "printWidth": 100
@@ -105,5 +105,14 @@
     "functions": 100,
     "lines": 100,
     "cache": false
+  },
+  "@xarc/module-dev": {
+    "features": [
+      "eslint",
+      "eslintTS",
+      "mocha",
+      "typedoc",
+      "typescript"
+    ]
   }
 }

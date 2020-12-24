@@ -110,25 +110,26 @@ npm install</code></pre>
 					<h2>Project Structure</h2>
 				</a>
 				<p>This module&#39;s setup assumes your project follows a directory structure like below:</p>
-				<pre><code>.gitignore
-package.json
-tsconfig.json
+				<pre><code><span class="hljs-selector-class">.gitignore</span>
+<span class="hljs-selector-tag">package</span><span class="hljs-selector-class">.json</span>
+<span class="hljs-selector-tag">tsconfig</span><span class="hljs-selector-class">.json</span>
 
-<span class="hljs-class"><span class="hljs-keyword">lib</span>/</span>
-  index.js
+<span class="hljs-selector-tag">lib</span>/
+  <span class="hljs-selector-tag">index</span><span class="hljs-selector-class">.js</span>
 
-dist/
-  index.js
-  index.d.js
-  index.js.map
+<span class="hljs-selector-tag">dist</span>/
+  <span class="hljs-selector-tag">index</span><span class="hljs-selector-class">.js</span>
+  <span class="hljs-selector-tag">index</span><span class="hljs-selector-class">.d</span><span class="hljs-selector-class">.js</span>
+  <span class="hljs-selector-tag">index</span><span class="hljs-selector-class">.js</span><span class="hljs-selector-class">.map</span>
 
-src/
-  index.ts
+<span class="hljs-selector-tag">src</span>/
+  <span class="hljs-selector-tag">index</span><span class="hljs-selector-class">.ts</span>
 
-test/
-  spec/**
+<span class="hljs-selector-tag">test</span>/
+  <span class="hljs-selector-tag">spec</span><span class="hljs-comment">/**
     *.spec.js
-    *.spec.ts</code></pre><p>If you are writing JavaScript that node.js can execute directly, then you can put them in <code>lib</code> dir.</p>
+    *.spec.ts</span></code></pre>
+				<p>If you are writing JavaScript that node.js can execute directly, then you can put them in <code>lib</code> dir.</p>
 				<p>If you are using TypeScript, then you can put your <code>ts</code> source in <code>src</code> dir, and then run <code>npx tsc</code> to compile them into the <code>dist</code> dir.</p>
 				<p><code>.d.ts</code> type definition files and source map files will also be generated into the <code>dist</code> dir.</p>
 				<a href="#developing" id="developing" style="color: inherit; text-decoration: none;">
@@ -220,7 +221,7 @@ mkdir src</code></pre>
 				<p>You can add JSX support by updating your <code>tsconfig.json</code> with following options:</p>
 				<pre><code class="language-js">{
   <span class="hljs-attr">compilerOptions</span>: {
-    <span class="hljs-string">"jsx"</span>: <span class="hljs-string">"react"</span>
+    <span class="hljs-string">&quot;jsx&quot;</span>: <span class="hljs-string">&quot;react&quot;</span>
   }
 }</code></pre>
 				<a href="#react" id="react" style="color: inherit; text-decoration: none;">
@@ -243,9 +244,9 @@ mkdir src</code></pre>
 					<li>Update <code>compilerOptions</code> in <code>tsconfig.json</code>:</li>
 				</ol>
 				<pre><code class="language-js">{
-  <span class="hljs-string">"compilerOptions"</span>: {
-    <span class="hljs-string">"lib"</span>: [<span class="hljs-string">"dom"</span>],
-    <span class="hljs-string">"jsxFactory"</span>: <span class="hljs-string">"h"</span>
+  <span class="hljs-string">&quot;compilerOptions&quot;</span>: {
+    <span class="hljs-string">&quot;lib&quot;</span>: [<span class="hljs-string">&quot;dom&quot;</span>],
+    <span class="hljs-string">&quot;jsxFactory&quot;</span>: <span class="hljs-string">&quot;h&quot;</span>
   }
 }</code></pre>
 				<a href="#additional-targets" id="additional-targets" style="color: inherit; text-decoration: none;">
@@ -277,6 +278,9 @@ mkdir src</code></pre>
 						<a href="modules/_feature_.html">&quot;feature&quot;</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="modules/_module_dev_.html">&quot;module-<wbr>dev&quot;</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -296,6 +300,7 @@ mkdir src</code></pre>
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
@@ -311,6 +316,5 @@ mkdir src</code></pre>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

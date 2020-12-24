@@ -105,7 +105,7 @@
 					<div class="tsd-signature tsd-kind-icon">Xarc<wbr>Module<wbr>Dev<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>enableLinting<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>forceColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>srcDir<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>tsConfig<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>xclap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>xrun<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/945c414e/src/module-dev.ts#L15">module-dev.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/8880f6b6/src/module-dev.ts#L14">module-dev.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -182,13 +182,13 @@
 					<a name="loadtasks" class="tsd-anchor"></a>
 					<h3>load<wbr>Tasks</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">load<wbr>Tasks<span class="tsd-signature-symbol">(</span>xrunOrOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">load<wbr>Tasks<span class="tsd-signature-symbol">(</span>xrunOrOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/945c414e/src/module-dev.ts#L771">module-dev.ts:771</a></li>
+									<li>Defined in <a href="https://github.com/electrode-io/module-dev/blob/8880f6b6/src/module-dev.ts#L715">module-dev.ts:715</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,22 +197,23 @@
 								</div>
 								<p>See document for @xarc/npm-run at <a href="https://www.npmjs.com/package/@xarc/npm-run">https://www.npmjs.com/package/@xarc/npm-run</a></p>
 								<p>To use, create a file <code>xrun-tasks.js</code>:</p>
-								<pre><code class="language-js">  <span class="hljs-built_in">require</span>(<span class="hljs-string">"@xarc/module-dev"</span>)()</code></pre>
+								<pre><code class="language-js">  <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;@xarc/module-dev&quot;</span>)()</code></pre>
 								<p>or <code>xrun-tasks.ts</code> for typescript:</p>
-								<pre><code class="language-ts">  <span class="hljs-keyword">import</span> loadTasks <span class="hljs-keyword">from</span> <span class="hljs-string">"@xarc/module-dev"</span>;
+								<pre><code class="language-ts">  <span class="hljs-keyword">import</span> loadTasks <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@xarc/module-dev&quot;</span>;
   loadTasks();</code></pre>
 								<p>Then run the command <code>npx xrun</code> to see available build tasks.</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> xrunOrOptions: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol"> = { xrun }</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> xrunOrOptions: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="_module_dev_.html#xarcmoduledevoptions" class="tsd-signature-type">XarcModuleDevOptions</a><span class="tsd-signature-symbol"> = { xrun }</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>options</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<p>xrun - the instance of <code>@xarc/run</code> used to load tasks.</p>
 						</li>
 					</ul>
 				</section>
@@ -226,6 +227,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="_feature_.html">&quot;feature&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_index_.html">&quot;index&quot;</a>
 					</li>
 					<li class="current tsd-kind-module">
 						<a href="_module_dev_.html">&quot;module-<wbr>dev&quot;</a>
@@ -256,6 +260,7 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
@@ -271,6 +276,5 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

@@ -128,7 +128,23 @@ After this module created `tsconfig.json` for you, you can change it as you like
 
 If you didn't bootstrap your project with [eslint] support, you can always add it later by running `npx xrun eslint`, and then `npm install`.
 
-You can also invoke the linting task with `npx xrun lint`
+You need to create a `.eslintrc.js` file. If you want to use the eslint config this module setup, set it to:
+
+```js
+const { eslintRcNodeTypeScript } = require(".");
+module.exports = {
+  extends: eslintRcNodeTypeScript
+};
+```
+
+The configs available are:
+
+- `eslintRcNode` - Node.js
+- `eslintRcNodeTypeScript` - Node.js for typescript
+- `eslintRcTest` - Unit test code
+- `eslintRcTestTypeScript` - typescript unit test code
+
+You can invoke the linting task with `npx xrun lint`
 
 The build task `check` will run linting also. You can invoke it with `npx xrun check`.
 

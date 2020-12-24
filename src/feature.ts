@@ -5,8 +5,8 @@ export class Feature {
   _name: string;
   _deps: Record<string, any>;
   _devDeps: Record<string, any>;
-  _setup: Function;
-  _remove: Function;
+  _setup: () => void;
+  _remove: () => void;
 
   constructor({
     name,
@@ -18,8 +18,8 @@ export class Feature {
     name: string;
     deps?: Record<string, any>;
     devDeps?: Record<string, any>;
-    setup?: Function;
-    remove?: Function;
+    setup?: () => void;
+    remove?: () => void;
     depFeatures?: string[];
   }) {
     this._name = name;
