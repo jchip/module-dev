@@ -174,7 +174,19 @@ mkdir src</code></pre>
 					<h2><a href="https://eslint.org/">eslint</a> Support</h2>
 				</a>
 				<p>If you didn&#39;t bootstrap your project with <a href="https://eslint.org/">eslint</a> support, you can always add it later by running <code>npx xrun eslint</code>, and then <code>npm install</code>.</p>
-				<p>You can also invoke the linting task with <code>npx xrun lint</code></p>
+				<p>You need to create a <code>.eslintrc.js</code> file. If you want to use the eslint config this module setup, set it to:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { eslintRcNodeTypeScript } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;.&quot;</span>);
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">extends</span>: eslintRcNodeTypeScript
+};</code></pre>
+				<p>The configs available are:</p>
+				<ul>
+					<li><code>eslintRcNode</code> - Node.js</li>
+					<li><code>eslintRcNodeTypeScript</code> - Node.js for typescript</li>
+					<li><code>eslintRcTest</code> - Unit test code</li>
+					<li><code>eslintRcTestTypeScript</code> - typescript unit test code</li>
+				</ul>
+				<p>You can invoke the linting task with <code>npx xrun lint</code></p>
 				<p>The build task <code>check</code> will run linting also. You can invoke it with <code>npx xrun check</code>.</p>
 				<p>If you need to disable certain eslint rules for a specific source file, you can add the following comment to the top of your file.</p>
 				<pre><code class="language-js"><span class="hljs-comment">/* eslint-disable no-console, no-magic-numbers, max-statements */</span></code></pre>
