@@ -572,7 +572,7 @@ function makeTasks(options: XarcModuleDevOptions) {
           .trim()
           .substr(0, 8);
 
-        return xrun.exec(`typedoc --excludeNotExported --gitRevision ${commitId} --out docs src`, {
+        return xrun.exec(`typedoc --gitRevision ${commitId} --out docs src`, {
           flags: "tty"
         });
       }
