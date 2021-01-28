@@ -1,11 +1,11 @@
-# Support for developing node.js modules with mocha/eslint/typescript
+# node.js modules development support
 
 This module offers common config and setup for developing a node.js module.
 
 Support for standard tools include:
 
 - Language: [TypeScript]
-- Testing and code coverage: [chai], [mocha], [nyc], [sinon]
+- Testing and code coverage: [chai], [mocha], [nyc], [sinon], [tap]
 - Code linting: [eslint]
 - Documentation: [jsdoc], [typedoc]
 
@@ -264,3 +264,4 @@ Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses
 [npm]: https://www.npmjs.com/
 [react]: https://reactjs.org/
 [preact]: https://preactjs.com/
+[tap]: https://www.npmjs.com/package/tap
