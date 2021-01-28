@@ -122,7 +122,16 @@ And now you can start writing typescript code in the `src` directory
 
 ### tsconfig.json
 
-After this module created `tsconfig.json` for you, you can change it as you like. This moudle won't override your settings.
+After this module created `tsconfig.json` for you, you can change it as you like. This module won't override your settings.
+
+#### `esModuleInterop`
+
+The default `tsconfig.json` will set `esModuleInterop` to `true` for you so you can import classic modules directly
+like `import Path from "path"`. Set it to `false` if you don't want this.
+
+#### `tslib` and `importHelpers`
+
+`tslib` is automatically added to your module's `dependencies` and `importHelpers` set to `true` in your `tsconfig.json`. If this is not needed or wanted, then feel free to remove them. They won't be touched again.
 
 ## [eslint] Support
 
@@ -133,7 +142,7 @@ You need to create a `.eslintrc.js` file. If you want to use the eslint config t
 ```js
 const { eslintRcNodeTypeScript } = require(".");
 module.exports = {
-  extends: eslintRcNodeTypeScript
+  extends: eslintRcNodeTypeScript,
 };
 ```
 

@@ -48,11 +48,16 @@ To bootstrap your project, run:
 
     npx xrun --require @xarc/module-dev init [options]
 
+Default features: tap, typescript, typedoc, prettier
+
 Options:
 
   --eslint        - bootstrap with eslint support
+  --mocha         - bootstrap with mocha for running tests
+  --no-tap        - don't bootstrap with tap support
   --no-typescript - don't bootstrap with typescript support
-  --no-typedoc    - don't bootstrap with typedoc support`);
+  --no-typedoc    - don't bootstrap with typedoc support
+  --no-prettier   - don't bootstrap with prettier support`);
 }
 
 installSetup();

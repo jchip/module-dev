@@ -5,6 +5,9 @@
     }
   },
   "typescript": {
+    "deps": {
+      "tslib": "^2.1.0"
+    },
     "devDeps": {
       "@istanbuljs/nyc-config-typescript": "^1.0.1",
       "source-map-support": "^0.5.19",
@@ -45,6 +48,11 @@
     "devDeps": {
       "@types/tap": "^14.10.0",
       "tap": "~14.10.8"
+    }
+  },
+  "prettier": {
+    "devDeps": {
+      "prettier": "^2.2.1"
     }
   }
 }

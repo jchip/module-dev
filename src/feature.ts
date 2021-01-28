@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { sortObjKeys } from "./utils";
 
 export class Feature {
@@ -13,7 +13,7 @@ export class Feature {
     deps = {},
     devDeps = {},
     setup = _.noop,
-    remove = _.noop
+    remove = _.noop,
   }: {
     name: string;
     deps?: Record<string, any>;
@@ -70,7 +70,7 @@ export class Feature {
   }
 
   check(deps: Record<string, any>, target = {}): boolean {
-    return Object.keys(deps).every(x => {
+    return Object.keys(deps).every((x) => {
       return target.hasOwnProperty(x);
     });
   }

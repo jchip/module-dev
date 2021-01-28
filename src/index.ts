@@ -1,4 +1,4 @@
-import * as Path from "path";
+import Path from "path";
 export * from "./module-dev";
 export { loadTasks as default } from "./module-dev";
 

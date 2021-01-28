@@ -1,9 +1,9 @@
 /* eslint-disable no-console, global-require, no-magic-numbers, max-statements, consistent-return, complexity*/
-import * as Path from "path";
-import * as xsh from "xsh";
-import * as Fs from "fs";
-import * as xrun from "@xarc/run";
-import * as _ from "lodash";
+import Path from "path";
+import xsh from "xsh";
+import Fs from "fs";
+import xrun from "@xarc/run";
+import _ from "lodash";
 import { Feature } from "./feature";
 
 import { loadSync } from "tsconfig";
@@ -94,6 +94,10 @@ class XarcModuleDev {
     return this.hasFeature("tap");
   }
 
+  get hasPrettier(): boolean {
+    return this.hasFeature("prettier");
+  }
+
   constructor(options: XarcModuleDevOptions) {
     this._myPkg = JSON.parse(Fs.readFileSync(Path.join(__dirname, "../package.json")).toString());
     this.setupAvailableFeatures();
@@ -108,7 +112,8 @@ class XarcModuleDev {
         outDir: "dist",
         lib: ["es2018"],
         module: "CommonJS",
-        esModuleInterop: false,
+        esModuleInterop: true,
+        importHelpers: true,
         target: "ES2018",
         preserveConstEnums: true,
         sourceMap: true,
@@ -119,9 +124,9 @@ class XarcModuleDev {
         alwaysStrict: true,
         // we are not ready for strict null checks
         // strictNullChecks: true,
-        strictFunctionTypes: true
+        strictFunctionTypes: true,
       },
-      include: ["src"]
+      include: ["src"],
     };
     this._tsConfig = options.tsConfig || defaultTsConfig;
   }
@@ -136,7 +141,7 @@ class XarcModuleDev {
       ...featuresDep.typedoc,
       setup: () => {
         this.setupTypedocScripts();
-      }
+      },
     });
 
     const typescriptFeature = new Feature({
@@ -145,17 +150,17 @@ class XarcModuleDev {
       setup: () => {
         this.setupCompileScripts();
         this.setupTsConfig();
-      }
+      },
     });
 
     const eslintFeature = new Feature({
       name: "eslint",
-      ...featuresDep.eslint
+      ...featuresDep.eslint,
     });
 
     const eslintTSFeature = new Feature({
       name: "eslint-ts",
-      ...featuresDep["eslint-ts"]
+      ...featuresDep["eslint-ts"],
     });
 
     const mochaFeature = new Feature({
@@ -165,7 +170,7 @@ class XarcModuleDev {
         this.setupMochaConfig();
         this.setupCoverage();
       },
-      remove: () => this.removeMochaConfig()
+      remove: () => this.removeMochaConfig(),
     });
 
     const tapFeature = new Feature({
@@ -174,7 +179,16 @@ class XarcModuleDev {
       setup: () => {
         this.setupTapConfig();
       },
-      remove: () => this.removeTapConfig()
+      remove: () => this.removeTapConfig(),
+    });
+
+    const prettierFeature = new Feature({
+      name: "prettier",
+      ...featuresDep.prettier,
+      setup: () => {
+        this.setupPrettierConfig();
+      },
+      remove: () => this.removePrettierConfig(),
     });
 
     this._availableFeatures = {
@@ -183,7 +197,8 @@ class XarcModuleDev {
       eslint: eslintFeature,
       eslintTS: eslintTSFeature,
       mocha: mochaFeature,
-      tap: tapFeature
+      tap: tapFeature,
+      prettier: prettierFeature,
     };
   }
 
@@ -197,7 +212,7 @@ class XarcModuleDev {
     const fromDeps = this.updateFeaturesFromDeps();
     this._existFeatures = _.uniq(
       Object.keys(fromDeps)
-        .filter(k => fromDeps[k])
+        .filter((k) => fromDeps[k])
         .concat(_.get(this._appPkg, [this._myPkg.name, "features"], []))
         .filter(_.identity)
     ).sort();
@@ -210,7 +225,7 @@ class XarcModuleDev {
       typescript: af.typescript.checkPkg(this._appPkg),
       typedoc: af.typedoc.checkPkg(this._appPkg),
       mocha: af.mocha.checkPkg(this._appPkg),
-      tap: af.tap.checkPkg(this._appPkg)
+      tap: af.tap.checkPkg(this._appPkg),
     };
   }
 
@@ -341,7 +356,7 @@ node_modules
   }
 
   appHasDevDeps(...deps: string[]): boolean {
-    return deps.every(x => {
+    return deps.every((x) => {
       const dd = this._appPkg.devDependencies;
       return dd && dd.hasOwnProperty(x);
     });
@@ -396,7 +411,7 @@ node_modules
     this._appPkg.scripts = {
       build: "tsc",
       ...scripts,
-      prepublishOnly: `xrun [[${prepublishTasks.join(", ")}], xarc/check]`
+      prepublishOnly: `xrun [[${prepublishTasks.join(", ")}], xarc/check]`,
     };
     if (this.appPkgChanged()) {
       this.recordAction(`INFO: added npm scripts for your typescript and release lifecycle.`);
@@ -411,7 +426,7 @@ node_modules
     const scripts = this._appPkg.scripts || {};
     this._appPkg.scripts = scripts;
     _.defaults(scripts, {
-      docs: `xrun xarc/docs`
+      docs: `xrun xarc/docs`,
     });
   }
 
@@ -422,11 +437,11 @@ node_modules
     this._appPkg.scripts = {
       ...this._appPkg.scripts,
       test: "xrun xarc/test-only",
-      coverage: "xrun xarc/test-cov"
+      coverage: "xrun xarc/test-cov",
     };
 
     tapOpts.ts ??= false;
-    tapOpts["test-regex"] ??= "(^test\/spec\/.*)\.([mc]js|[jt]sx?)";
+    tapOpts["test-regex"] ??= "(^test/spec/.*).([mc]js|[jt]sx?)";
 
     // coverage enforcement options
     tapOpts["check-coverage"] ??= true;
@@ -461,7 +476,7 @@ node_modules
     this._appPkg.scripts = {
       ...this._appPkg.scripts,
       test: "xrun xarc/test-only",
-      coverage: "xrun xarc/test-cov"
+      coverage: "xrun xarc/test-cov",
     };
 
     const tsNodeReg = "ts-node/register";
@@ -489,6 +504,15 @@ node_modules
     }
   }
 
+  setupPrettierConfig(): void {
+    const prettierOpts = _.get(this._appPkg, "prettier", {});
+    _.defaults(prettierOpts, { printWidth: 100 });
+    this._appPkg.prettier = prettierOpts;
+    if (this.appPkgChanged()) {
+      this.recordAction(`INFO: add prettier config to your package.json.`);
+    }
+  }
+
   removeMochaConfig(): void {
     delete this._appPkg.mocha;
     if (this.appPkgChanged()) {
@@ -500,6 +524,13 @@ node_modules
     delete this._appPkg.tap;
     if (this.appPkgChanged()) {
       this.recordAction(`INFO: removed tap config from your package.json`);
+    }
+  }
+
+  removePrettierConfig(): void {
+    delete this._appPkg.prettier;
+    if (this.appPkgChanged()) {
+      this.recordAction(`INFO: removed prettier config from your package.json`);
     }
   }
 
@@ -522,7 +553,7 @@ node_modules
       branches: 100,
       functions: 100,
       lines: 100,
-      cache: !this.hasTypescript
+      cache: !this.hasTypescript,
     });
     nyc.reporter = _.uniq(nyc.reporter.concat(["lcov", "text", "text-summary"]).sort());
     nyc.exclude = _.uniq(
@@ -536,7 +567,7 @@ node_modules
           "*clap.ts",
           "gulpfile.js",
           "dist",
-          "test"
+          "test",
         ])
         .sort()
     );
@@ -628,15 +659,12 @@ function makeTasks(options: XarcModuleDevOptions) {
       desc: "Generate docs from typedoc comments",
       async task() {
         const { stdout } = await xsh.exec("git rev-list -1 HEAD src", true);
-        const commitId = stdout
-          .split("\n")[0]
-          .trim()
-          .substr(0, 8);
+        const commitId = stdout.split("\n")[0].trim().substr(0, 8);
 
         return xrun.exec(`typedoc --gitRevision ${commitId} --out docs src`, {
-          flags: "tty"
+          flags: "tty",
         });
-      }
+      },
     },
     typescript: {
       desc: `Add/remove config and deps to your project for typescript support:
@@ -645,7 +673,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         updateFeature(context.argOpts.remove, "typescript");
         xarcModuleDev.finish();
       },
-      argOpts: { remove: { type: "boolean" } }
+      argOpts: { remove: { type: "boolean" } },
     },
     typedoc: {
       desc: `Add/remove support to your project for generating API docs using typedoc
@@ -654,7 +682,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         updateFeature(context.argOpts.remove, "typedoc");
         xarcModuleDev.finish();
       },
-      argOpts: { remove: { type: "boolean" } }
+      argOpts: { remove: { type: "boolean" } },
     },
     eslint: {
       desc: `Add/remove config and deps to your project for eslint support
@@ -663,7 +691,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         updateFeature(context.argOpts.remove, "eslint");
         xarcModuleDev.finish();
       },
-      argOpts: { remove: { type: "boolean" } }
+      argOpts: { remove: { type: "boolean" } },
     },
     mocha: {
       desc: `Add/remove config and deps to your project for mocha/sinon support
@@ -672,7 +700,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         updateFeature(context.argOpts.remove, "mocha");
         xarcModuleDev.finish();
       },
-      argOpts: { remove: { type: "boolean" } }
+      argOpts: { remove: { type: "boolean" } },
     },
     tap: {
       desc: `Add/remove config and deps to your project for tap support
@@ -681,17 +709,27 @@ function makeTasks(options: XarcModuleDevOptions) {
         updateFeature(context.argOpts.remove, "tap");
         xarcModuleDev.finish();
       },
-      argOpts: { remove: { type: "boolean" } }
+      argOpts: { remove: { type: "boolean" } },
+    },
+    prettier: {
+      desc: `Add/remove config and deps to your project for prettier support
+          Options: --remove to remove`,
+      task(context) {
+        updateFeature(context.argOpts.remove, "prettier");
+        xarcModuleDev.finish();
+      },
+      argOpts: { remove: { type: "boolean" } },
     },
     init: {
       desc: `Bootstrap a project for development with @xarc/module-dev
-          Options: --no-typescript --no-typedoc --no-tap --eslint --mocha`,
+          Options: --no-typescript --no-typedoc --no-tap --eslint --mocha --tap`,
       argOpts: {
         tap: { type: "boolean", default: true },
         typescript: { type: "boolean", default: true },
         typedoc: { type: "boolean", default: true },
         mocha: { type: "boolean", default: false },
-        eslint: { type: "boolean", default: false }
+        eslint: { type: "boolean", default: false },
+        prettier: { type: "boolean", default: true },
       },
       task(context) {
         const xtra = _.without(
@@ -700,35 +738,23 @@ function makeTasks(options: XarcModuleDevOptions) {
           "typescript",
           "eslint",
           "typedoc",
-          "mocha"
+          "mocha",
+          "prettier"
         );
         if (xtra.length > 0) {
           throw new Error(`Unknown options for init task ${xtra.join(", ")}`);
         }
 
-        const features: string[] = [];
-        if (context.argOpts.typescript) {
-          features.push("typescript");
-        }
-        if (context.argOpts.eslint) {
-          features.push("eslint");
-        }
-        if (context.argOpts.typedoc) {
-          features.push("typedoc");
-        }
-        if (context.argOpts.mocha) {
-          features.push("mocha");
-        }
-        if (context.argOpts.tap) {
-          features.push("tap");
-        }
+        const features = ["typescript", "eslint", "typedoc", "mocha", "tap", "prettier"].filter(
+          (f) => context.argOpts[f]
+        );
         xarcModuleDev.loadAppPkg();
         updateFeature(false, ...features);
         xarcModuleDev.setupXrunFile();
         xarcModuleDev.setupPublishingConfig();
         xarcModuleDev.setupGitIgnore();
         xarcModuleDev.finish();
-      }
+      },
     },
     "test-only": {
       desc: "Run just your unit tests (no coverage)",
@@ -740,7 +766,7 @@ function makeTasks(options: XarcModuleDevOptions) {
         } else {
           console.log("No Test Framework setup: Please add tap/mocha using npx xrun mocha|tap");
         }
-      }
+      },
     },
     "test-cov": {
       desc: "Run your unit tests with coverage",
@@ -752,8 +778,8 @@ function makeTasks(options: XarcModuleDevOptions) {
         } else {
           console.log("No Test Framework setup: Please add tap/mocha using npx xrun mocha|tap");
         }
-      }
-    }
+      },
+    },
   };
 
   /* if linting enable, then add eslint tasks */
@@ -762,16 +788,17 @@ function makeTasks(options: XarcModuleDevOptions) {
 
     if (lintTasks.length > 0) {
       Object.assign(tasks, {
-        lint: concurrent(...lintTasks)
+        lint: concurrent(...lintTasks),
       });
     }
   } else if (options.enableLinting === false) {
     Object.assign(tasks, {
-      lint: "echo linting is disabled by option enableLinting set to false in your xrun tasks file."
+      lint:
+        "echo linting is disabled by option enableLinting set to false in your xrun tasks file.",
     });
   } else {
     Object.assign(tasks, {
-      lint: `echo linting is disabled because eslint is not setup.  Run 'npx xrun eslint' to setup.`
+      lint: `echo linting is disabled because eslint is not setup.  Run 'npx xrun eslint' to setup.`,
     });
   }
 

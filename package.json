@@ -39,6 +39,7 @@
     "filter-scan-dir": "^1.0.10",
     "lodash": "^4.17.20",
     "tsconfig": "^7.0.0",
+    "tslib": "^2.1.0",
     "xsh": "^0.4.5"
   },
   "devDependencies": {
@@ -58,7 +59,7 @@
     "eslint-plugin-jsdoc": "^30.7.9",
     "mocha": "^7.1.0",
     "nyc": "^15.0.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.2.1",
     "sinon": "^7.2.6",
     "sinon-chai": "^3.3.0",
     "source-map-support": "^0.5.19",
