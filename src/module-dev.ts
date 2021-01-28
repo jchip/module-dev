@@ -132,11 +132,13 @@ class XarcModuleDev {
       },
       include: ["src"],
     };
-    this._tsConfig = _.merge({}, options.tsConfig || defaultTsConfig);
+    const existTsConfig = this.readTsConfig();
+    this._tsConfig = _.merge({}, options.tsConfig || defaultTsConfig, existTsConfig);
   }
 
   updateTsConfigTypes() {
     if (this.hasTypescript) {
+      const before = JSON.stringify(this._tsConfig);
       let types = _.get(this._tsConfig, "compilerOptions.types", []);
       if (this.hasFeature("jestTS")) {
         types.push("jest");
@@ -149,6 +151,9 @@ class XarcModuleDev {
         types = _.without(types, "mocha", "chai", "sinon", "sinon-chai");
       }
       _.set(this._tsConfig, "compilerOptions.types", _.uniq(types));
+      if (JSON.stringify(this._tsConfig) !== before) {
+        this.recordAction("INFO: updated tsconfig.json for you.  Please commit it");
+      }
     }
   }
 
@@ -343,6 +348,12 @@ node_modules
     }
   }
 
+  refreshFeatureDeps() {
+    for (const f of this._features) {
+      this._availableFeatures[f].updateToPkg(this._appPkg);
+    }
+  }
+
   hasFeature(feature: string): boolean {
     return this._features.includes(feature);
   }
@@ -381,6 +392,9 @@ node_modules
 
     this.updateFeatures(newFeatures);
 
+    this.updateTsConfigTypes();
+    this.setupTsConfig();
+
     if (this.appPkgChanged()) {
       this._depsChanges = this._depsChanges.concat(this._removedFeatures);
     }
@@ -408,10 +422,7 @@ node_modules
     });
   }
 
-  setupTsConfig(): void {
-    if (!this.hasTypescript) {
-      return;
-    }
+  readTsConfig(): Record<any, any> {
     const file = Path.resolve("tsconfig.json");
     let tsConfig = {};
     try {
@@ -419,12 +430,17 @@ node_modules
     } catch {
       tsConfig = {};
     }
-    const existData = JSON.stringify(tsConfig);
-    const finalTsConfig = _.merge({}, this._tsConfig, tsConfig);
-    if (JSON.stringify(finalTsConfig) !== existData) {
-      Fs.writeFileSync(file, `${JSON.stringify(finalTsConfig, null, 2)}\n`);
-      this.recordAction("INFO: updated tsconfig.json for you.  Please commit it");
+
+    return tsConfig;
+  }
+
+  setupTsConfig(): void {
+    if (!this.hasTypescript) {
+      return;
     }
+    const file = Path.resolve("tsconfig.json");
+
+    Fs.writeFileSync(file, `${JSON.stringify(this._tsConfig, null, 2)}\n`);
   }
 
   setupPublishingConfig(): void {
@@ -552,6 +568,12 @@ node_modules
 
   setupJestConfig(): void {
     const jestOpts = this._appPkg.jest || {};
+
+    this._appPkg.scripts = {
+      ...this._appPkg.scripts,
+      test: "xrun xarc/test-only",
+      coverage: "xrun xarc/test-cov",
+    };
 
     if (this.hasTypescript) {
       _.defaults(jestOpts, {
@@ -704,9 +726,13 @@ function makeTasks(options: XarcModuleDevOptions) {
   const updateFeature = (remove = false, ...features: string[]) => {
     if (remove) {
       xarcModuleDev.removeFeatures(...features);
+      // go through all remaining features to ensure any overlap deps are added back
+      xarcModuleDev.refreshFeatureDeps();
     } else {
       xarcModuleDev.addFeatures(...features);
     }
+    xarcModuleDev.updateTsConfigTypes();
+    xarcModuleDev.setupTsConfig();
   };
 
   const lint = options.enableLinting !== false && xarcModuleDev.hasFeature("eslint");
@@ -787,6 +813,15 @@ function makeTasks(options: XarcModuleDevOptions) {
           Options: --remove to remove`,
       task(context) {
         updateFeature(context.argOpts.remove, "tap");
+        xarcModuleDev.finish();
+      },
+      argOpts: { remove: { type: "boolean" } },
+    },
+    jest: {
+      desc: `Add/remove config and deps to your project for jest support
+          Options: --remove to remove`,
+      task(context) {
+        updateFeature(context.argOpts.remove, "jest");
         xarcModuleDev.finish();
       },
       argOpts: { remove: { type: "boolean" } },
