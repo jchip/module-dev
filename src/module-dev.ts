@@ -1,4 +1,4 @@
-/* eslint-disable no-console, global-require, no-magic-numbers, max-statements */
+/* eslint-disable no-console, global-require, no-magic-numbers, max-statements, consistent-return, complexity*/
 import * as Path from "path";
 import * as xsh from "xsh";
 import * as Fs from "fs";
@@ -90,6 +90,10 @@ class XarcModuleDev {
     return this.hasFeature("mocha");
   }
 
+  get hasTap(): boolean {
+    return this.hasFeature("tap");
+  }
+
   constructor(options: XarcModuleDevOptions) {
     this._myPkg = JSON.parse(Fs.readFileSync(Path.join(__dirname, "../package.json")).toString());
     this.setupAvailableFeatures();
@@ -164,12 +168,22 @@ class XarcModuleDev {
       remove: () => this.removeMochaConfig()
     });
 
+    const tapFeature = new Feature({
+      name: "tap",
+      ...featuresDep.tap,
+      setup: () => {
+        this.setupTapConfig();
+      },
+      remove: () => this.removeTapConfig()
+    });
+
     this._availableFeatures = {
       typedoc: typedocFeature,
       typescript: typescriptFeature,
       eslint: eslintFeature,
       eslintTS: eslintTSFeature,
-      mocha: mochaFeature
+      mocha: mochaFeature,
+      tap: tapFeature
     };
   }
 
@@ -195,7 +209,8 @@ class XarcModuleDev {
       eslint: af.eslint.checkPkg(this._appPkg),
       typescript: af.typescript.checkPkg(this._appPkg),
       typedoc: af.typedoc.checkPkg(this._appPkg),
-      mocha: af.mocha.checkPkg(this._appPkg)
+      mocha: af.mocha.checkPkg(this._appPkg),
+      tap: af.tap.checkPkg(this._appPkg)
     };
   }
 
@@ -400,6 +415,45 @@ node_modules
     });
   }
 
+  setupTapConfig(): void {
+    const tapOpts = this._appPkg.tap || {};
+    this._appPkg.tap = tapOpts;
+
+    this._appPkg.scripts = {
+      ...this._appPkg.scripts,
+      test: "xrun xarc/test-only",
+      coverage: "xrun xarc/test-cov"
+    };
+
+    tapOpts.ts ??= false;
+    tapOpts["test-regex"] ??= "(^test\/spec\/.*)\.([mc]js|[jt]sx?)";
+
+    // coverage enforcement options
+    tapOpts["check-coverage"] ??= true;
+    tapOpts.branches ??= 100;
+    tapOpts.functions ??= 100;
+    tapOpts.lines ??= 100;
+    tapOpts.statements ??= 100;
+
+    const tsNodeReg = "ts-node/register";
+    const sourceMapReg = "source-map-support/register";
+    const nodeArgs = tapOpts["node-arg"] || [];
+
+    if (this.appHasDevDeps("ts-node") && nodeArgs.indexOf(tsNodeReg) === -1) {
+      nodeArgs.push("-r", tsNodeReg);
+    }
+
+    if (this.appHasDevDeps("source-map-support") && nodeArgs.indexOf(sourceMapReg) === -1) {
+      nodeArgs.push("-r", sourceMapReg);
+    }
+
+    tapOpts["node-arg"] = nodeArgs;
+
+    if (this.appPkgChanged()) {
+      this.recordAction(`INFO: updated tap options in your package.json.`);
+    }
+  }
+
   setupMochaConfig(): void {
     const mochaOpts = this._appPkg.mocha || {};
     this._appPkg.mocha = mochaOpts;
@@ -439,6 +493,13 @@ node_modules
     delete this._appPkg.mocha;
     if (this.appPkgChanged()) {
       this.recordAction(`INFO: removed mocha config from your package.json`);
+    }
+  }
+
+  removeTapConfig(): void {
+    delete this._appPkg.tap;
+    if (this.appPkgChanged()) {
+      this.recordAction(`INFO: removed tap config from your package.json`);
     }
   }
 
@@ -613,18 +674,29 @@ function makeTasks(options: XarcModuleDevOptions) {
       },
       argOpts: { remove: { type: "boolean" } }
     },
+    tap: {
+      desc: `Add/remove config and deps to your project for tap support
+          Options: --remove to remove`,
+      task(context) {
+        updateFeature(context.argOpts.remove, "tap");
+        xarcModuleDev.finish();
+      },
+      argOpts: { remove: { type: "boolean" } }
+    },
     init: {
       desc: `Bootstrap a project for development with @xarc/module-dev
-          Options: --no-typescript --no-typedoc --no-mocha --eslint`,
+          Options: --no-typescript --no-typedoc --no-tap --eslint --mocha`,
       argOpts: {
+        tap: { type: "boolean", default: true },
         typescript: { type: "boolean", default: true },
         typedoc: { type: "boolean", default: true },
-        mocha: { type: "boolean", default: true },
+        mocha: { type: "boolean", default: false },
         eslint: { type: "boolean", default: false }
       },
       task(context) {
         const xtra = _.without(
           Object.keys(context.argOpts),
+          "tap",
           "typescript",
           "eslint",
           "typedoc",
@@ -647,6 +719,9 @@ function makeTasks(options: XarcModuleDevOptions) {
         if (context.argOpts.mocha) {
           features.push("mocha");
         }
+        if (context.argOpts.tap) {
+          features.push("tap");
+        }
         xarcModuleDev.loadAppPkg();
         updateFeature(false, ...features);
         xarcModuleDev.setupXrunFile();
@@ -657,11 +732,27 @@ function makeTasks(options: XarcModuleDevOptions) {
     },
     "test-only": {
       desc: "Run just your unit tests (no coverage)",
-      task: `mocha --extension ts,js,tsx,jsx,cjs,mjs -c test/spec`
+      task() {
+        if (xarcModuleDev.hasMocha) {
+          return xsh.exec(`mocha --extension ts,js,tsx,jsx,cjs,mjs -c test/spec`);
+        } else if (xarcModuleDev.hasTap) {
+          return xsh.exec(`tap --no-coverage`);
+        } else {
+          console.log("No Test Framework setup: Please add tap/mocha using npx xrun mocha|tap");
+        }
+      }
     },
     "test-cov": {
       desc: "Run your unit tests with coverage",
-      task: `nyc xrun -q test-only`
+      task() {
+        if (xarcModuleDev.hasMocha) {
+          return xsh.exec(`nyc xrun -q test-only`);
+        } else if (xarcModuleDev.hasTap) {
+          return xsh.exec(`tap`);
+        } else {
+          console.log("No Test Framework setup: Please add tap/mocha using npx xrun mocha|tap");
+        }
+      }
     }
   };
 
