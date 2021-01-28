@@ -54,5 +54,19 @@
     "devDeps": {
       "prettier": "^2.2.1"
     }
+  },
+  "jest": {
+    "devDeps": {
+      "@types/jest": "^26.0.20",
+      "jest": "^26.6.3",
+      "ts-jest": "^26.4.4",
+      "typescript": "^4.1.3"
+    }
+  },
+  "jest-ts": {
+    "devDeps": {
+      "@types/jest": "^26.0.20",
+      "ts-jest": "^26.4.4"
+    }
   }
 }

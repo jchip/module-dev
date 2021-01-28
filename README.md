@@ -5,7 +5,7 @@ This module offers common config and setup for developing a node.js module.
 Support for standard tools include:
 
 - Language: [TypeScript]
-- Testing and code coverage: [chai], [mocha], [nyc], [sinon], [tap]
+- Testing and code coverage: [chai], [mocha], [nyc], [sinon], [tap], [jest]
 - Code linting: [eslint]
 - Documentation: [jsdoc], [typedoc]
 
@@ -274,3 +274,4 @@ Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses
 [react]: https://reactjs.org/
 [preact]: https://preactjs.com/
 [tap]: https://www.npmjs.com/package/tap
+[jest]: https://jestjs.io/

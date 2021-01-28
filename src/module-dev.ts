@@ -94,6 +94,10 @@ class XarcModuleDev {
     return this.hasFeature("tap");
   }
 
+  get hasJest(): boolean {
+    return this.hasFeature("jest");
+  }
+
   get hasPrettier(): boolean {
     return this.hasFeature("prettier");
   }
@@ -128,7 +132,24 @@ class XarcModuleDev {
       },
       include: ["src"],
     };
-    this._tsConfig = options.tsConfig || defaultTsConfig;
+    this._tsConfig = _.merge({}, options.tsConfig || defaultTsConfig);
+  }
+
+  updateTsConfigTypes() {
+    if (this.hasTypescript) {
+      let types = _.get(this._tsConfig, "compilerOptions.types", []);
+      if (this.hasFeature("jestTS")) {
+        types.push("jest");
+      } else {
+        types = _.without(types, "jest");
+      }
+      if (this.hasFeature("mocha")) {
+        types.push("mocha", "chai", "sinon", "sinon-chai");
+      } else {
+        types = _.without(types, "mocha", "chai", "sinon", "sinon-chai");
+      }
+      _.set(this._tsConfig, "compilerOptions.types", _.uniq(types));
+    }
   }
 
   setupAvailableFeatures() {
@@ -149,6 +170,7 @@ class XarcModuleDev {
       ...featuresDep.typescript,
       setup: () => {
         this.setupCompileScripts();
+        this.updateTsConfigTypes();
         this.setupTsConfig();
       },
     });
@@ -191,6 +213,20 @@ class XarcModuleDev {
       remove: () => this.removePrettierConfig(),
     });
 
+    const jestFeature = new Feature({
+      name: "jest",
+      ...featuresDep.jest,
+      setup: () => {
+        this.setupJestConfig();
+      },
+      remove: () => this.removeJestConfig(),
+    });
+
+    const jestTSFeature = new Feature({
+      name: "jest-ts",
+      ...featuresDep["jest-ts"],
+    });
+
     this._availableFeatures = {
       typedoc: typedocFeature,
       typescript: typescriptFeature,
@@ -199,6 +235,8 @@ class XarcModuleDev {
       mocha: mochaFeature,
       tap: tapFeature,
       prettier: prettierFeature,
+      jest: jestFeature,
+      jestTS: jestTSFeature,
     };
   }
 
@@ -279,6 +317,10 @@ node_modules
       newFeatures.push("eslintTS");
     }
 
+    if (newFeatures.includes("jest") && newFeatures.includes("typescript")) {
+      newFeatures.push("jestTS");
+    }
+
     // if typedoc enabled, then needs typescript
     if (newFeatures.includes("typedoc")) {
       newFeatures.push("typescript");
@@ -315,6 +357,10 @@ node_modules
     // if eslint or typescript are removed, then need to remove eslintTS
     if (!newFeatures.includes("typescript") || !newFeatures.includes("eslint")) {
       removing.push("eslintTS");
+    }
+
+    if (!newFeatures.includes("typescript") || !newFeatures.includes("jest")) {
+      removing.push("jestTS");
     }
 
     // if typescript removed, then need to remove typedoc
@@ -504,6 +550,24 @@ node_modules
     }
   }
 
+  setupJestConfig(): void {
+    const jestOpts = this._appPkg.jest || {};
+
+    if (this.hasTypescript) {
+      _.defaults(jestOpts, {
+        transform: {
+          "^.+\\.(ts|tsx)$": "ts-jest",
+        },
+      });
+    }
+
+    this._appPkg.jest = jestOpts;
+
+    if (this.appPkgChanged()) {
+      this.recordAction(`INFO: update jest options in your package.json`);
+    }
+  }
+
   setupPrettierConfig(): void {
     const prettierOpts = _.get(this._appPkg, "prettier", {});
     _.defaults(prettierOpts, { printWidth: 100 });
@@ -531,6 +595,22 @@ node_modules
     delete this._appPkg.prettier;
     if (this.appPkgChanged()) {
       this.recordAction(`INFO: removed prettier config from your package.json`);
+    }
+  }
+
+  removeJestConfig(): void {
+    if (_.get(this._appPkg, ["jest", "transform", "^.+\\.(ts|tsx)$"])) {
+      delete this._appPkg.jest.transform["^.+\\.(ts|tsx)$"];
+      if (_.isEmpty(this._appPkg.jest.transform)) {
+        delete this._appPkg.jest.transform;
+      }
+      if (_.isEmpty(this._appPkg.jest)) {
+        delete this._appPkg.jest;
+      }
+    }
+
+    if (this.appPkgChanged()) {
+      this.recordAction(`INFO: removed jest config from your package.json`);
     }
   }
 
@@ -722,32 +802,25 @@ function makeTasks(options: XarcModuleDevOptions) {
     },
     init: {
       desc: `Bootstrap a project for development with @xarc/module-dev
-          Options: --no-typescript --no-typedoc --no-tap --eslint --mocha --tap`,
+          Options: --no-typescript --no-typedoc --no-jest --eslint --mocha --tap`,
       argOpts: {
-        tap: { type: "boolean", default: true },
+        prettier: { type: "boolean", default: true },
         typescript: { type: "boolean", default: true },
         typedoc: { type: "boolean", default: true },
+        jest: { type: "boolean", default: true },
         mocha: { type: "boolean", default: false },
         eslint: { type: "boolean", default: false },
-        prettier: { type: "boolean", default: true },
+        tap: { type: "boolean", default: false },
       },
       task(context) {
-        const xtra = _.without(
-          Object.keys(context.argOpts),
-          "tap",
-          "typescript",
-          "eslint",
-          "typedoc",
-          "mocha",
-          "prettier"
-        );
+        const initFeats = ["tap", "typescript", "eslint", "typedoc", "mocha", "prettier", "jest"];
+        const xtra = _.without(Object.keys(context.argOpts), ...initFeats);
         if (xtra.length > 0) {
           throw new Error(`Unknown options for init task ${xtra.join(", ")}`);
         }
 
-        const features = ["typescript", "eslint", "typedoc", "mocha", "tap", "prettier"].filter(
-          (f) => context.argOpts[f]
-        );
+        const features = initFeats.filter((f) => context.argOpts[f]);
+
         xarcModuleDev.loadAppPkg();
         updateFeature(false, ...features);
         xarcModuleDev.setupXrunFile();
@@ -760,9 +833,13 @@ function makeTasks(options: XarcModuleDevOptions) {
       desc: "Run just your unit tests (no coverage)",
       task() {
         if (xarcModuleDev.hasMocha) {
-          return xsh.exec(`mocha --extension ts,js,tsx,jsx,cjs,mjs -c test/spec`);
+          return xrun.exec(`mocha --extension ts,js,tsx,jsx,cjs,mjs -c test/spec`, {
+            flags: { tty: true },
+          });
         } else if (xarcModuleDev.hasTap) {
-          return xsh.exec(`tap --no-coverage`);
+          return xrun.exec(`tap --no-coverage`, { flags: { tty: true } });
+        } else if (xarcModuleDev.hasJest) {
+          return xrun.exec(`jest`, { flags: { tty: true } });
         } else {
           console.log("No Test Framework setup: Please add tap/mocha using npx xrun mocha|tap");
         }
@@ -772,9 +849,11 @@ function makeTasks(options: XarcModuleDevOptions) {
       desc: "Run your unit tests with coverage",
       task() {
         if (xarcModuleDev.hasMocha) {
-          return xsh.exec(`nyc xrun -q test-only`);
+          return xrun.exec(`nyc xrun -q test-only`, { flags: { tty: true } });
         } else if (xarcModuleDev.hasTap) {
-          return xsh.exec(`tap`);
+          return xrun.exec(`tap`, { flags: { tty: true } });
+        } else if (xarcModuleDev.hasJest) {
+          return xrun.exec(`jest --coverage`, { flags: { tty: true } });
         } else {
           console.log("No Test Framework setup: Please add tap/mocha using npx xrun mocha|tap");
         }

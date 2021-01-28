@@ -54,7 +54,8 @@ Options:
 
   --eslint        - bootstrap with eslint support
   --mocha         - bootstrap with mocha for running tests
-  --no-tap        - don't bootstrap with tap support
+  --tap           - don't bootstrap with tap support
+  --no-jest       - don't bootstrap with jest support
   --no-typescript - don't bootstrap with typescript support
   --no-typedoc    - don't bootstrap with typedoc support
   --no-prettier   - don't bootstrap with prettier support`);
