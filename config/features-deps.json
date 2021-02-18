@@ -28,7 +28,8 @@
   "eslint-ts": {
     "devDeps": {
       "@typescript-eslint/eslint-plugin": "^4.11.0",
-      "@typescript-eslint/parser": "^4.11.0"
+      "@typescript-eslint/parser": "^4.11.0",
+      "eslint-plugin-tsdoc": "^0.2.11"
     }
   },
   "mocha": {

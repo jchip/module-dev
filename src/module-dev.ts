@@ -183,6 +183,18 @@ class XarcModuleDev {
     const eslintFeature = new Feature({
       name: "eslint",
       ...featuresDep.eslint,
+      setup: () => {
+        const rcFile = Path.resolve(".eslintrc.js");
+        if (!Fs.existsSync(rcFile)) {
+          Fs.writeFileSync(
+            rcFile,
+            `
+const { eslintRcTestTypeScript } = require("@xarc/module-dev");
+module.exports = { extends: eslintRcTestTypeScript };
+`
+          );
+        }
+      },
     });
 
     const eslintTSFeature = new Feature({
@@ -670,6 +682,7 @@ node_modules
           "gulpfile.js",
           "dist",
           "test",
+          ".eslintrc.js",
         ])
         .sort()
     );
@@ -754,7 +767,10 @@ function makeTasks(options: XarcModuleDevOptions) {
         [outDir !== "lib" && "lib", "src", "test"]
       );
 
-    const dirs = [].concat(srcDir).join(" ");
+    const dirs = []
+      .concat(srcDir)
+      .filter((x) => x)
+      .join(" ");
     return [`~$eslint --ext .js,.jsx,.ts,.tsx --color --no-error-on-unmatched-pattern ${dirs}`];
   };
 

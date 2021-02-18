@@ -4,10 +4,16 @@ extends:
   - "./.eslintrc-test"
   - 'plugin:@typescript-eslint/recommended'
 
+plugins:
+  - "eslint-plugin-tsdoc"
+
+
 rules:
   "@typescript-eslint/no-explicit-any":
     - 0
   "@typescript-eslint/explicit-function-return-type":
     - 0
   "@typescript-eslint/no-inferrable-types":
+    - 0
+  "valid-jsdoc":
     - 0
