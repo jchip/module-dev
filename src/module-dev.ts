@@ -485,7 +485,7 @@ node_modules
     this._appPkg.scripts = {
       build: "tsc",
       ...scripts,
-      prepublishOnly: `xrun [[${prepublishTasks.join(", ")}], xarc/check]`,
+      prepublishOnly: `xrun --serial [[${prepublishTasks.join(", ")}], xarc/check]`,
     };
     if (this.appPkgChanged()) {
       this.recordAction(`INFO: added npm scripts for your typescript and release lifecycle.`);
