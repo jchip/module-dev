@@ -10,7 +10,9 @@
     "compile": "tsc",
     "postinstall": "node install.js",
     "docs": "xrun xarc/docs",
-    "prepublishOnly": "xrun [[build, docs], xarc/check]"
+    "prepublishOnly": "xrun [[build, docs], xarc/check]",
+    "prepack": "publish-util-prepack",
+    "postpack": "publish-util-postpack"
   },
   "repository": {
     "type": "git",
@@ -61,6 +63,7 @@
     "mocha": "^9.1.0",
     "nyc": "^15.1.0",
     "prettier": "^2.3.2",
+    "publish-util": "^2.0.0",
     "sinon": "^7.2.6",
     "sinon-chai": "^3.3.0",
     "source-map-support": "^0.5.19",
