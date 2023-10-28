@@ -1,0 +1,29 @@
+{
+  "name": "eslint-deps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "homepage": "",
+  "license": "UNLICENSED",
+  "scripts": {
+    "update": "fyn add --install=false --dev babel-eslint eslint eslint-config-walmart eslint-plugin-filenames eslint-plugin-jsdoc"
+  },
+  "author": "",
+  "files": [
+    "src",
+    "lib",
+    "dist"
+  ],
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.52.0",
+    "eslint-config-walmart": "^2.2.1",
+    "eslint-plugin-filenames": "^1.3.2",
+    "eslint-plugin-jsdoc": "^46.8.2"
+  }
+}

@@ -162,87 +162,80 @@ class XarcModuleDev {
       Fs.readFileSync(Path.join(__dirname, "../config/features-deps.json")).toString()
     );
 
-    const typedocFeature = new Feature({
-      name: "typedoc",
-      ...featuresDep.typedoc,
-      setup: () => {
-        this.setupTypedocScripts();
-      },
+    const readFeatureDeps = (name): any => {
+      const pkgJson = JSON.parse(
+        Fs.readFileSync(
+          Path.join(__dirname, "../config/", featuresDep[name], "package.json")
+        ).toString()
+      );
+
+      return {
+        deps: pkgJson.dependencies,
+        devDeps: pkgJson.devDependencies,
+      };
+    };
+
+    const initFeature = (name: string, setup?: any, remove?: any): any => {
+      return new Feature({ name, ...readFeatureDeps(name), setup, remove });
+    };
+
+    const typedocFeature = initFeature("typedoc", () => this.setupTypedocScripts());
+
+    const typescriptFeature = initFeature("typescript", () => {
+      this.setupCompileScripts();
+      this.updateTsConfigTypes();
+      this.setupTsConfig();
     });
 
-    const typescriptFeature = new Feature({
-      name: "typescript",
-      ...featuresDep.typescript,
-      setup: () => {
-        this.setupCompileScripts();
-        this.updateTsConfigTypes();
-        this.setupTsConfig();
-      },
-    });
-
-    const eslintFeature = new Feature({
-      name: "eslint",
-      ...featuresDep.eslint,
-      setup: () => {
-        const rcFile = Path.resolve(".eslintrc.js");
-        if (!Fs.existsSync(rcFile)) {
-          Fs.writeFileSync(
-            rcFile,
-            `
+    const eslintFeature = initFeature("eslint", () => {
+      const rcFile = Path.resolve(".eslintrc.js");
+      if (!Fs.existsSync(rcFile)) {
+        Fs.writeFileSync(
+          rcFile,
+          `
 const { eslintRcTestTypeScript } = require("@xarc/module-dev");
 module.exports = { extends: eslintRcTestTypeScript };
 `
-          );
-        }
-      },
+        );
+      }
     });
 
-    const eslintTSFeature = new Feature({
-      name: "eslint-ts",
-      ...featuresDep["eslint-ts"],
-    });
+    const eslintTSFeature = initFeature("eslint-ts");
 
-    const mochaFeature = new Feature({
-      name: "mocha",
-      ...featuresDep.mocha,
-      setup: () => {
+    const mochaFeature = initFeature(
+      "mocha",
+      () => {
         this.setupMochaConfig();
         this.setupCoverage();
       },
-      remove: () => this.removeMochaConfig(),
-    });
+      () => this.removeMochaConfig()
+    );
 
-    const tapFeature = new Feature({
-      name: "tap",
-      ...featuresDep.tap,
-      setup: () => {
+    const tapFeature = initFeature(
+      "tap",
+      () => {
         this.setupTapConfig();
       },
-      remove: () => this.removeTapConfig(),
-    });
+      () => this.removeTapConfig()
+    );
 
-    const prettierFeature = new Feature({
-      name: "prettier",
-      ...featuresDep.prettier,
-      setup: () => {
+    const prettierFeature = initFeature(
+      "prettier",
+      () => {
         this.setupPrettierConfig();
       },
-      remove: () => this.removePrettierConfig(),
-    });
+      () => this.removePrettierConfig()
+    );
 
-    const jestFeature = new Feature({
-      name: "jest",
-      ...featuresDep.jest,
-      setup: () => {
+    const jestFeature = initFeature(
+      "jest",
+      () => {
         this.setupJestConfig();
       },
-      remove: () => this.removeJestConfig(),
-    });
+      () => this.removeJestConfig()
+    );
 
-    const jestTSFeature = new Feature({
-      name: "jest-ts",
-      ...featuresDep["jest-ts"],
-    });
+    const jestTSFeature = initFeature("jest-ts");
 
     this._availableFeatures = {
       typedoc: typedocFeature,
@@ -923,8 +916,7 @@ function makeTasks(options: XarcModuleDevOptions) {
     }
   } else if (options.enableLinting === false) {
     Object.assign(tasks, {
-      lint:
-        "echo linting is disabled by option enableLinting set to false in your xrun tasks file.",
+      lint: "echo linting is disabled by option enableLinting set to false in your xrun tasks file.",
     });
   } else {
     Object.assign(tasks, {

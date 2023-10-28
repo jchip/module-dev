@@ -1,0 +1,33 @@
+{
+  "name": "mocha-deps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "homepage": "",
+  "license": "UNLICENSED",
+  "scripts": {
+    "update": "fyn add --install=false --dev @types/chai @types/mocha @types/sinon @types/sinon-chai chai mocha nyc sinon sinon-chai"
+  },
+  "author": "",
+  "files": [
+    "src",
+    "lib",
+    "dist"
+  ],
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.9",
+    "@types/mocha": "^10.0.3",
+    "@types/sinon": "^10.0.20",
+    "@types/sinon-chai": "^3.2.11",
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "sinon": "^17.0.0",
+    "sinon-chai": "^3.7.0"
+  }
+}

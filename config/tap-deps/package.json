@@ -1,0 +1,26 @@
+{
+  "name": "tap-deps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "homepage": "",
+  "license": "UNLICENSED",
+  "scripts": {
+    "update": "fyn add --install=false --dev @types/tap tap"
+  },
+  "author": "",
+  "files": [
+    "src",
+    "lib",
+    "dist"
+  ],
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "@types/tap": "^15.0.10",
+    "tap": "^18.5.3"
+  }
+}
